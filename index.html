@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>115學年度 三年23班｜國三班親會資訊平台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-950:#0A1830;
+    --navy-900:#0E2141;
+    --navy-800:#163457;
+    --navy-700:#1E4570;
+    --navy-600:#2C5A8C;
+    --blue-gray:#7C93B3;
+    --ink-light:#EAF1FB;
+    --muted:#9FB4D1;
+    --amber:#F2A93B;
+    --amber-deep:#D98A1E;
+    --amber-soft:rgba(242,169,59,0.14);
+    --amber-soft-border:rgba(242,169,59,0.5);
+    --white:#FFFFFF;
+    --radius-lg:26px;
+    --radius-md:18px;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;padding:0;min-height:100%;
+    background:
+      radial-gradient(circle at 88% -6%, rgba(60,110,170,0.35), transparent 42%),
+      radial-gradient(circle at 6% 96%, rgba(242,169,59,0.10), transparent 40%),
+      linear-gradient(160deg, var(--navy-900) 0%, var(--navy-950) 70%);
+    color:var(--ink-light);
+    font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei","Heiti TC",sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .bg-grid{
+    position:fixed;inset:0;pointer-events:none;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size:64px 64px;
+    mask-image:linear-gradient(180deg, rgba(0,0,0,0.6), transparent 60%);
+  }
+
+  /* ---------- 頂部品牌列（與各子頁一致） ---------- */
+  .platform-topbar{
+    position:relative;height:44px;z-index:50;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:0 20px;
+    background:linear-gradient(180deg,#0E2141,#0A1830);
+    border-bottom:1px solid rgba(242,169,59,0.35);
+    box-shadow:0 2px 10px rgba(0,0,0,0.35);
+  }
+  .platform-topbar .ptb-brand{
+    display:flex;align-items:center;gap:8px;color:var(--amber);font-weight:800;
+    font-size:14px;letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .platform-topbar .ptb-links{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;}
+  .platform-topbar .ptb-links::-webkit-scrollbar{display:none;}
+  .platform-topbar a.ptb-link{
+    flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;
+    color:#C7D2E6;text-decoration:none;font-size:12.5px;font-weight:700;
+    padding:6px 12px;border-radius:999px;border:1px solid rgba(255,255,255,0.14);
+    background:rgba(255,255,255,0.04);transition:all .2s ease;white-space:nowrap;
+  }
+  .platform-topbar a.ptb-link:hover{background:rgba(255,255,255,0.1);color:#fff;}
+  .platform-topbar a.ptb-link.active{background:var(--amber);border-color:var(--amber);color:#0A1830;}
+  @media (max-width:820px){
+    .platform-topbar{height:auto;flex-wrap:wrap;padding:8px 12px;gap:8px;}
+    .platform-topbar .ptb-brand{font-size:12px;}
+    .platform-topbar a.ptb-link{font-size:11px;padding:5px 10px;}
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;z-index:1;
+    max-width:1180px;margin:0 auto;
+    padding:clamp(48px,7vw,88px) 32px clamp(28px,4vw,44px);
+    text-align:center;
+  }
+  .hero-kicker{
+    display:inline-flex;align-items:center;gap:10px;
+    font-size:15px;font-weight:700;color:var(--amber);
+    letter-spacing:2px;
+    padding:9px 22px;
+    border:1.5px solid var(--amber-soft-border);
+    background:var(--amber-soft);
+    border-radius:999px;
+    margin-bottom:28px;
+  }
+  .hero h1{
+    font-size:clamp(32px,5vw,58px);
+    font-weight:900;line-height:1.28;margin:0 0 18px;
+    color:var(--white);
+  }
+  .hero h1 span{color:var(--amber);}
+  .hero p{
+    font-size:clamp(15px,1.6vw,19px);
+    color:var(--muted);
+    line-height:1.8;
+    max-width:640px;margin:0 auto;
+    font-weight:500;
+  }
+
+  /* ---------- CARD GRID ---------- */
+  .section{
+    position:relative;z-index:1;
+    max-width:1180px;margin:0 auto;
+    padding:0 32px clamp(48px,6vw,80px);
+  }
+  .card-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(280px,1fr));
+    gap:24px;
+  }
+  .nav-card{
+    position:relative;
+    display:flex;flex-direction:column;
+    gap:16px;
+    padding:36px 34px;
+    background:linear-gradient(165deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015));
+    border:1px solid rgba(255,255,255,0.10);
+    border-radius:var(--radius-lg);
+    text-decoration:none;
+    color:inherit;
+    overflow:hidden;
+    transition:transform .28s ease, border-color .28s ease, background .28s ease;
+  }
+  .nav-card::before{
+    content:"";
+    position:absolute;top:0;left:0;right:0;height:4px;
+    background:linear-gradient(90deg, var(--card-accent, var(--amber)), transparent);
+    opacity:.85;
+  }
+  .nav-card:hover{
+    transform:translateY(-6px);
+    border-color:rgba(255,255,255,0.22);
+    background:linear-gradient(165deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+  }
+  .nav-card .nc-top{
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .nav-card .nc-icon{
+    width:60px;height:60px;flex:none;
+    display:flex;align-items:center;justify-content:center;
+    font-size:28px;
+    border-radius:16px;
+    background:var(--card-accent-soft, var(--amber-soft));
+    border:1px solid var(--card-accent-border, var(--amber-soft-border));
+  }
+  .nav-card .nc-arrow{
+    font-size:20px;color:var(--blue-gray);
+    transition:transform .25s ease, color .25s ease;
+  }
+  .nav-card:hover .nc-arrow{ transform:translateX(4px); color:var(--amber); }
+  .nav-card .nc-eyebrow{
+    font-size:13px;font-weight:700;letter-spacing:1px;
+    color:var(--card-accent, var(--amber));
+  }
+  .nav-card h3{
+    margin:2px 0 0;
+    font-size:24px;font-weight:900;color:var(--white);
+    line-height:1.4;
+  }
+  .nav-card p{
+    margin:0;font-size:14.5px;color:var(--muted);line-height:1.75;
+  }
+  .nav-card .nc-tags{
+    display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:6px;
+  }
+  .nav-card .nc-tag{
+    font-size:12px;font-weight:700;color:var(--blue-gray);
+    padding:5px 12px;border-radius:999px;
+    border:1px solid rgba(255,255,255,0.14);
+    background:rgba(255,255,255,0.03);
+  }
+
+  @media (max-width:900px){
+    .card-grid{grid-template-columns:1fr;}
+  }
+
+  /* ---------- 使用說明 ---------- */
+  .howto{
+    max-width:1180px;margin:0 auto;padding:0 32px clamp(48px,6vw,80px);
+    position:relative;z-index:1;
+  }
+  .howto-box{
+    display:flex;flex-wrap:wrap;gap:28px;
+    padding:30px 36px;
+    border-radius:var(--radius-md);
+    border:1px solid rgba(255,255,255,0.10);
+    background:rgba(255,255,255,0.03);
+  }
+  .howto-item{
+    flex:1 1 220px;
+    display:flex;gap:14px;align-items:flex-start;
+  }
+  .howto-item .hi-num{
+    flex:none;width:32px;height:32px;border-radius:50%;
+    background:var(--navy-700);color:var(--amber);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:14px;
+  }
+  .howto-item .hi-text{font-size:14px;color:var(--muted);line-height:1.7;}
+  .howto-item .hi-text b{color:var(--ink-light);}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    position:relative;z-index:1;
+    text-align:center;
+    padding:28px 20px 40px;
+    color:var(--blue-gray);
+    font-size:13px;
+    border-top:1px solid rgba(255,255,255,0.08);
+  }
+  footer .sign{color:var(--amber);font-weight:700;}
+
+  /* ---------- 全螢幕按鈕 ---------- */
+  .fs-btn{
+    position:fixed;right:24px;bottom:24px;z-index:60;
+    display:flex;align-items:center;gap:8px;
+    padding:12px 18px;
+    border-radius:999px;
+    border:1px solid var(--amber-soft-border);
+    background:rgba(14,33,65,0.85);
+    backdrop-filter:blur(8px);
+    color:var(--ink-light);
+    font-family:inherit;font-size:13.5px;font-weight:700;
+    cursor:pointer;
+    box-shadow:0 6px 20px rgba(0,0,0,0.35);
+    transition:all .2s ease;
+  }
+  .fs-btn:hover{
+    background:var(--amber);
+    color:var(--navy-950);
+    border-color:var(--amber);
+    transform:translateY(-2px);
+  }
+  .fs-btn .fs-icon{font-size:16px;line-height:1;}
+  @media (max-width:600px){
+    .fs-btn{right:16px;bottom:16px;padding:10px 14px;font-size:12.5px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+
+<nav class="platform-topbar">
+  <div class="ptb-brand"><span class="ptb-logo">🎓</span><span>115學年度 三年23班｜國三班親會資訊平台</span></div>
+<div class="ptb-links">
+  <a href="index.html" class="ptb-link active">🏠 平台首頁</a>
+  <a href="calendar.html" class="ptb-link">📅 升學行事曆</a>
+  <a href="daily-safety.html" class="ptb-link">🛡️ 生活與安全</a>
+  <a href="conduct-dress-code.html" class="ptb-link">👔 守時與服儀</a>
+  <a href="class-fund-snack.html" class="ptb-link">💰 班費與點心</a>
+  <a href="exam-change.html" class="ptb-link">📚 段考變革</a>
+</div>
+
+
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-kicker">115 學年度・第一次班親會</div>
+  <h1>三年23班<span>國三班親會</span>資訊平台</h1>
+  <p>把行事曆、生活安全、服儀規範、班費與點心說明整合在同一個地方，家長可以隨時回來查看，也方便老師在班親會現場直接投影播放各單元簡報。</p>
+</section>
+
+<section class="section">
+  <div class="card-grid">
+
+    <a class="nav-card" href="calendar.html" style="--card-accent:#3fa9f5;--card-accent-soft:rgba(63,169,245,0.14);--card-accent-border:rgba(63,169,245,0.5);">
+      <div class="nc-top">
+        <div class="nc-icon">📅</div>
+        <div class="nc-arrow">→</div>
+      </div>
+      <div class="nc-eyebrow">重大行事曆</div>
+      <h3>國三升學重大行事曆</h3>
+      <p>模擬考、段考、複習考、會考等關鍵日期一次掌握，並提供倒數計時、時間軸與依類別篩選的檢視方式。</p>
+      <div class="nc-tags">
+        <span class="nc-tag">會考倒數</span>
+        <span class="nc-tag">自動輪播</span>
+        <span class="nc-tag">全螢幕播放</span>
+      </div>
+    </a>
+
+    <a class="nav-card" href="daily-safety.html" style="--card-accent:#F2A93B;--card-accent-soft:rgba(242,169,59,0.14);--card-accent-border:rgba(242,169,59,0.5);">
+      <div class="nc-top">
+        <div class="nc-icon">🛡️</div>
+        <div class="nc-arrow">→</div>
+      </div>
+      <div class="nc-eyebrow">每日生活與安全</div>
+      <h3>每日生活與校園安全提醒</h3>
+      <p>7:10～7:30 到校時段、遲到處理原則、放學動線與家長最需要幫忙的 5 件事，共 12 頁重點簡報。</p>
+      <div class="nc-tags">
+        <span class="nc-tag">到校安全</span>
+        <span class="nc-tag">放學提醒</span>
+        <span class="nc-tag">12 頁簡報</span>
+      </div>
+    </a>
+
+    <a class="nav-card" href="conduct-dress-code.html" style="--card-accent:#5c9be0;--card-accent-soft:rgba(92,155,224,0.14);--card-accent-border:rgba(92,155,224,0.5);">
+      <div class="nc-top">
+        <div class="nc-icon">👔</div>
+        <div class="nc-arrow">→</div>
+      </div>
+      <div class="nc-eyebrow">生活規範</div>
+      <h3>守時原則與服儀提醒</h3>
+      <p>準時到校原則、遲到規範說明、制服日穿著方式，以及保暖與服儀規定之間常見的混淆說明。</p>
+      <div class="nc-tags">
+        <span class="nc-tag">7:30 到校</span>
+        <span class="nc-tag">服儀規定</span>
+        <span class="nc-tag">10 頁簡報</span>
+      </div>
+    </a>
+
+    <a class="nav-card" href="class-fund-snack.html" style="--card-accent:#6fb98f;--card-accent-soft:rgba(111,185,143,0.14);--card-accent-border:rgba(111,185,143,0.5);">
+      <div class="nc-top">
+        <div class="nc-icon">💰</div>
+        <div class="nc-arrow">→</div>
+      </div>
+      <div class="nc-eyebrow">班費與點心</div>
+      <h3>班級公費與第八節點心說明</h3>
+      <p>校慶園遊會結餘的運用方式、第八節點心自主訂購制度，以及先前贊助結餘的處理方式說明。</p>
+      <div class="nc-tags">
+        <span class="nc-tag">專款專用</span>
+        <span class="nc-tag">使用者付費</span>
+        <span class="nc-tag">8 頁簡報</span>
+      </div>
+    </a>
+
+    <a class="nav-card" href="exam-change.html" style="--card-accent:#a78bfa;--card-accent-soft:rgba(167,139,250,0.14);--card-accent-border:rgba(167,139,250,0.5);">
+      <div class="nc-top">
+        <div class="nc-icon">📚</div>
+        <div class="nc-arrow">→</div>
+      </div>
+      <div class="nc-eyebrow">段考變革</div>
+      <h3>國三段考變革通知</h3>
+      <p>段考新增生物科的原因與用意說明：重溫舊知、以考促學、提早準備，以及家長在家可以怎麼協助孩子。</p>
+      <div class="nc-tags">
+        <span class="nc-tag">新增生物</span>
+        <span class="nc-tag">會考準備</span>
+        <span class="nc-tag">9 頁簡報</span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<section class="howto">
+  <div class="howto-box">
+    <div class="howto-item">
+      <div class="hi-num">1</div>
+      <div class="hi-text"><b>點選任一卡片</b>即可進入該單元的完整簡報，內容與班親會現場播放版本一致。</div>
+    </div>
+    <div class="howto-item">
+      <div class="hi-num">2</div>
+      <div class="hi-text">每個頁面都支援 <b>← → 方向鍵翻頁</b>、<b>空白鍵</b>播放／暫停，以及點擊右下角按鈕進入<b>全螢幕</b>播放模式。</div>
+    </div>
+    <div class="howto-item">
+      <div class="hi-num">3</div>
+      <div class="hi-text">頂端導覽列會一直保留，方便在五個單元與首頁之間<b>隨時切換</b>；投影全螢幕時導覽列會自動隱藏。</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  115 學年度 三年23班班親會資訊平台　｜　<span class="sign">三年23班 導師</span> 敬製
+</footer>
+
+<button class="fs-btn" id="fsBtn" type="button" aria-label="切換全螢幕">
+  <span class="fs-icon" id="fsIcon">⛶</span>
+  <span id="fsLabel">全螢幕</span>
+</button>
+
+<script>
+  const fsBtn = document.getElementById('fsBtn');
+  const fsIcon = document.getElementById('fsIcon');
+  const fsLabel = document.getElementById('fsLabel');
+
+  function updateFsUI(){
+    if(document.fullscreenElement){
+      fsIcon.textContent = '⤢';
+      fsLabel.textContent = '結束全螢幕';
+    } else {
+      fsIcon.textContent = '⛶';
+      fsLabel.textContent = '全螢幕';
+    }
+  }
+
+  fsBtn.addEventListener('click', () => {
+    if(!document.fullscreenElement){
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+      document.exitFullscreen().catch(() => {});
+    }
+  });
+
+  document.addEventListener('fullscreenchange', updateFsUI);
+</script>
+
+</body>
+</html>

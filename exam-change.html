@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>國三段考變革通知｜班親會大屏說明</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy-950: #0A1830;
+      --navy-900: #0E2141;
+      --navy-800: #163457;
+      --navy-700: #1E4570;
+      --navy-600: #2C5A8C;
+      --blue-gray: #7C93B3;
+      --paper: #F5F7FA;
+      --white: #FFFFFF;
+      --amber: #F2A93B;
+      --amber-deep: #D98A1E;
+      --amber-ink: #5A3B08;
+      --ink: #0F2038;
+      --muted: #5A6E8C;
+      --danger: #C0472E;
+      --ok: #2C7A57;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+      --shadow-card: 0 10px 30px rgba(6, 16, 34, 0.25);
+      --shadow-soft: 0 6px 20px rgba(6, 16, 34, 0.15);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--navy-950);
+      color: var(--white);
+      font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    /* ---------- Top Platform Nav ---------- */
+    .platform-topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 44px;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 16px;
+      background: linear-gradient(180deg, #0E2141, #0A1830);
+      border-bottom: 1px solid rgba(242, 169, 59, 0.35);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+    }
+
+    .platform-topbar .ptb-brand {
+      display: flex; align-items: center; gap: 8px;
+      color: #F2A93B; font-weight: 800; font-size: 13.5px;
+      letter-spacing: .5px; white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis;
+    }
+
+    .platform-topbar .ptb-links {
+      display: flex; gap: 6px; flex-wrap: nowrap;
+      overflow-x: auto; scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .platform-topbar .ptb-links::-webkit-scrollbar { display: none; }
+
+    .platform-topbar a.ptb-link {
+      flex: 0 0 auto;
+      display: inline-flex; align-items: center; gap: 4px;
+      color: #C7D2E6; text-decoration: none;
+      font-size: 12px; font-weight: 700;
+      padding: 5px 11px; border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.04);
+      transition: all .2s ease; white-space: nowrap;
+    }
+    .platform-topbar a.ptb-link:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+    .platform-topbar a.ptb-link.active { background: #F2A93B; border-color: #F2A93B; color: #0A1830; }
+
+    :fullscreen .platform-topbar, :-webkit-full-screen .platform-topbar { display: none !important; }
+    :fullscreen .deck-container, :-webkit-full-screen .deck-container { top: 0 !important; height: 100dvh !important; }
+
+    .deck-container {
+      position: relative;
+      top: 44px;
+      width: 100%;
+      height: calc(100dvh - 44px);
+      overflow: hidden;
+    }
+
+    /* ---------- Slide base ---------- */
+    .slide {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      padding: 1.8rem 2rem 5rem;
+      max-width: 1300px; margin: 0 auto;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      opacity: 0; visibility: hidden;
+      transform: translateX(40px);
+      transition: opacity .4s ease, transform .4s ease;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 88% -6%, rgba(60, 110, 170, 0.25), transparent 45%),
+        linear-gradient(160deg, var(--navy-900) 0%, var(--navy-950) 80%);
+    }
+    .slide.active { opacity: 1; visibility: visible; transform: translateX(0); pointer-events: auto; z-index: 5; }
+    .slide.exit-left { transform: translateX(-40px); }
+
+    .slide-deco-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.5), transparent 70%);
+    }
+
+    .slide-eyebrow {
+      font-size: clamp(0.9rem, 2vw, 1.25rem);
+      color: var(--blue-gray); font-weight: 700;
+      letter-spacing: 0.5px; margin-bottom: 0.4rem;
+    }
+
+    .slide-title {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 900; line-height: 1.3;
+      color: var(--white); margin: 0 0 1.2rem;
+    }
+    .slide-title .accent { color: var(--amber); }
+
+    .slide-body {
+      flex: 1;
+      display: flex; flex-direction: column; justify-content: center;
+      width: 100%; margin: auto 0;
+    }
+
+    .slide-footer {
+      margin-top: 1.5rem;
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      color: var(--amber); font-weight: 700;
+      text-align: center; line-height: 1.5;
+    }
+    .slide-footer.plain { color: var(--blue-gray); font-weight: 500; }
+
+    .card {
+      background: var(--white); color: var(--ink);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      padding: 1.8rem 1.6rem;
+    }
+
+    .pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 20px;
+      background: rgba(242, 169, 59, 0.14);
+      border: 1.5px solid rgba(242, 169, 59, 0.55);
+      border-radius: 999px;
+      color: var(--amber);
+      font-size: clamp(1rem, 2.2vw, 1.25rem);
+      font-weight: 700;
+    }
+
+    /* fade-in sequential cards animation */
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .slide.active .seq > * { animation: riseIn .5s ease both; }
+    .slide.active .seq > *:nth-child(1) { animation-delay: .05s; }
+    .slide.active .seq > *:nth-child(2) { animation-delay: .15s; }
+    .slide.active .seq > *:nth-child(3) { animation-delay: .25s; }
+    .slide.active .seq > *:nth-child(4) { animation-delay: .35s; }
+    .slide.active .seq > *:nth-child(5) { animation-delay: .45s; }
+    .slide.active .seq > *:nth-child(6) { animation-delay: .55s; }
+
+    /* ================= Slide 1: Cover ================= */
+    .cover { align-items: center; justify-content: center; text-align: center; }
+    .cover-illust { width: min(420px, 70vw); margin: 0 auto 1.2rem; }
+    .cover-kicker {
+      font-size: clamp(1rem, 2.2vw, 1.3rem);
+      color: var(--amber); font-weight: 700;
+      letter-spacing: 2px; margin-bottom: .6rem;
+    }
+    .cover-title {
+      font-size: clamp(2.4rem, 6vw, 4.5rem);
+      font-weight: 900; line-height: 1.25;
+      margin: 0 0 1rem;
+    }
+    .cover-sub {
+      font-size: clamp(1.2rem, 2.8vw, 1.8rem);
+      color: var(--paper); font-weight: 500;
+      margin: 0 0 1.4rem;
+    }
+    .cover-tags {
+      display: flex; gap: 14px; flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* ================= Compare (Slide 2) ================= */
+    .compare-wrap {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 1.2rem;
+      max-width: 1000px; margin: 0 auto 2rem;
+    }
+    .compare-box {
+      text-align: center;
+      border-radius: var(--radius-lg);
+      padding: 2rem 1.2rem;
+      box-shadow: var(--shadow-card);
+    }
+    .compare-box.before { background: rgba(124, 147, 179, 0.14); border: 1.5px solid rgba(124, 147, 179, 0.4); }
+    .compare-box.after { background: rgba(242, 169, 59, 0.14); border: 1.5px solid rgba(242, 169, 59, 0.6); }
+    .compare-label {
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      font-weight: 700; color: var(--blue-gray);
+      margin-bottom: .6rem;
+    }
+    .compare-box.after .compare-label { color: var(--amber); }
+    .compare-value {
+      font-size: clamp(1.5rem, 3.6vw, 2.4rem);
+      font-weight: 900; color: var(--white);
+    }
+    .compare-arrow { font-size: clamp(2rem, 4vw, 3rem); color: var(--amber); font-weight: 900; }
+
+    .highlight-strip {
+      text-align: center;
+      max-width: 900px; margin: 0 auto;
+    }
+    .highlight-strip .line {
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      font-weight: 900; line-height: 1.5;
+      color: var(--amber);
+    }
+    .clarify-note {
+      max-width: 900px; margin: 1.6rem auto 0;
+      background: rgba(255,255,255,0.06);
+      border-left: 4px solid var(--amber);
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.4rem;
+      font-size: clamp(1.05rem, 2vw, 1.3rem);
+      color: var(--paper); line-height: 1.7;
+    }
+
+    /* ================= Timeline (Slide 3) ================= */
+    .timeline-wrap {
+      display: flex; align-items: center; justify-content: center;
+      gap: .4rem; flex-wrap: wrap;
+      max-width: 1100px; margin: 0 auto 1.6rem;
+    }
+    .tl-node {
+      background: var(--white); color: var(--ink);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.3rem; text-align: center;
+      box-shadow: var(--shadow-soft);
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      font-weight: 700;
+      min-width: 120px;
+    }
+    .tl-node.dim { background: rgba(255,255,255,0.08); color: var(--paper); border: 1px dashed rgba(255,255,255,0.3); box-shadow: none; }
+    .tl-node.warn { background: rgba(192,71,46,0.16); color: #ffd7cc; border: 1.5px solid rgba(192,71,46,0.5); box-shadow: none; }
+    .tl-arrow { color: var(--amber); font-size: 1.6rem; font-weight: 900; }
+
+    .student-scene-row {
+      display: grid; grid-template-columns: 1fr auto 1fr;
+      align-items: center; gap: 1rem;
+      max-width: 1100px; margin: 0 auto;
+    }
+    .student-scene {
+      text-align: center;
+    }
+    .student-scene .cap {
+      margin-top: .6rem;
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      font-weight: 700; color: var(--paper);
+    }
+    .student-scene svg { width: min(220px, 60vw); height: auto; }
+    .mid-tag {
+      background: var(--amber); color: var(--amber-ink);
+      font-weight: 900; padding: .5rem 1.1rem;
+      border-radius: 999px; font-size: clamp(1rem, 2vw, 1.2rem);
+      white-space: nowrap;
+    }
+
+    /* ================= Flow (Slide 4) ================= */
+    .flow-wrap {
+      display: flex; align-items: center; justify-content: center;
+      flex-wrap: wrap; gap: .5rem;
+      max-width: 1150px; margin: 0 auto 1.4rem;
+    }
+    .flow-step {
+      background: var(--white); color: var(--ink);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.3rem;
+      font-weight: 700;
+      font-size: clamp(0.95rem, 1.9vw, 1.15rem);
+      box-shadow: var(--shadow-soft);
+      text-align: center;
+    }
+    .flow-step.core {
+      background: var(--amber); color: var(--amber-ink);
+      font-size: clamp(1.3rem, 3vw, 1.9rem);
+      padding: 1.3rem 1.8rem;
+    }
+    .flow-arrow { color: var(--amber); font-size: 1.5rem; font-weight: 900; }
+    .note-strip {
+      max-width: 850px; margin: 0 auto;
+      text-align: center;
+      font-size: clamp(1.05rem, 2.1vw, 1.35rem);
+      color: var(--paper); line-height: 1.8;
+    }
+
+    /* ================= Scenario split (Slide 5) ================= */
+    .split-wrap {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1.4rem; max-width: 1150px; margin: 0 auto 1rem;
+    }
+    .split-card {
+      background: var(--white); color: var(--ink);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      padding: 1.4rem 1.2rem;
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center;
+    }
+    .split-card svg { width: min(220px, 42vw); height: auto; margin-bottom: .6rem; }
+    .split-tag-neg { background: rgba(192,71,46,0.12); color: var(--danger); border: 1.5px solid rgba(192,71,46,0.4); }
+    .split-tag-pos { background: rgba(44,122,87,0.12); color: var(--ok); border: 1.5px solid rgba(44,122,87,0.4); }
+    .split-tag {
+      display: inline-block; font-weight: 800; font-size: .95rem;
+      padding: .3rem .9rem; border-radius: 999px; margin-bottom: .6rem;
+    }
+    .speech-bubble {
+      background: var(--paper); border-radius: 14px;
+      padding: .7rem 1rem; font-size: .95rem; font-weight: 600;
+      color: var(--ink); position: relative; margin-bottom: .5rem;
+      border: 1px solid rgba(15,32,56,0.08);
+    }
+    .split-caption {
+      font-weight: 800; font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--muted);
+    }
+    .vs-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: 1.2rem; margin-top: .6rem;
+    }
+    .vs-word { font-weight: 900; color: var(--amber); font-size: clamp(1.1rem, 2.3vw, 1.5rem); }
+    .vs-mid { color: var(--blue-gray); font-weight: 900; font-size: 1.3rem; }
+    .disclaimer {
+      text-align: center; margin-top: 1rem;
+      color: var(--blue-gray); font-size: .95rem;
+    }
+
+    /* ================= 3-card / 4-card grids (Slide 6,7) ================= */
+    .grid-3, .grid-4 {
+      display: grid; gap: 1.2rem;
+      max-width: 1150px; margin: 0 auto;
+    }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .num-card {
+      background: var(--white); color: var(--ink);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      padding: 1.6rem 1.3rem;
+      text-align: center;
+    }
+    .num-mark {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--amber); color: var(--amber-ink);
+      font-weight: 900; font-size: 1.2rem; margin-bottom: .8rem;
+    }
+    .num-title { font-weight: 800; font-size: clamp(1.1rem, 2.2vw, 1.35rem); margin-bottom: .4rem; }
+    .num-desc { color: var(--muted); font-size: clamp(.95rem, 1.8vw, 1.1rem); line-height: 1.6; }
+
+    .summary-banner {
+      max-width: 950px; margin: 1.6rem auto 0;
+      text-align: center;
+      background: rgba(242,169,59,0.12);
+      border: 1.5px solid rgba(242,169,59,0.5);
+      border-radius: var(--radius-md);
+      padding: 1.1rem 1.4rem;
+    }
+    .summary-banner .l1 { font-weight: 900; font-size: clamp(1.2rem, 2.6vw, 1.6rem); color: var(--amber); }
+    .summary-banner .l2 { font-weight: 700; font-size: clamp(1.05rem, 2.2vw, 1.3rem); color: var(--paper); margin-top: .3rem; }
+
+    /* ================= Slide 8: single key point ================= */
+    .keypoint-wrap { text-align: center; }
+    .keypoint-title {
+      font-size: clamp(2rem, 5vw, 3.3rem);
+      font-weight: 900; margin-bottom: 1.6rem;
+    }
+    .word-chain {
+      display: flex; align-items: center; justify-content: center;
+      gap: 1rem; flex-wrap: wrap; margin-bottom: 1.8rem;
+    }
+    .word-chip {
+      background: var(--white); color: var(--ink);
+      font-weight: 900; padding: .8rem 1.6rem;
+      border-radius: 999px; font-size: clamp(1.1rem, 2.4vw, 1.5rem);
+      box-shadow: var(--shadow-soft);
+    }
+    .word-chain .arrow { color: var(--amber); font-size: 1.6rem; font-weight: 900; }
+    .keypoint-sub {
+      font-size: clamp(1.3rem, 3vw, 1.9rem);
+      font-weight: 800; color: var(--amber);
+      line-height: 1.6;
+    }
+
+    /* ================= Slide 9: closing ================= */
+    .closing { align-items: center; justify-content: center; text-align: center; }
+    .closing-title {
+      font-size: clamp(1.9rem, 4.6vw, 3.2rem);
+      font-weight: 900; line-height: 1.4;
+      margin: 0 0 1.6rem;
+    }
+    .closing-words {
+      display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+      margin-bottom: 1.8rem;
+    }
+    .closing-word {
+      background: rgba(242,169,59,0.14);
+      border: 1.5px solid rgba(242,169,59,0.55);
+      color: var(--amber); font-weight: 800;
+      padding: .6rem 1.3rem; border-radius: 999px;
+      font-size: clamp(1rem, 2vw, 1.25rem);
+    }
+    .closing-thanks {
+      font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+      color: var(--paper); line-height: 1.8; font-weight: 500;
+    }
+
+    /* ---------- Adjustment diagram (Slide 2 supplemental / used inline) ---------- */
+    .adj-diagram {
+      max-width: 900px; margin: 1.6rem auto 0;
+      display: grid; grid-template-columns: 1fr 1fr;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+    .adj-col {
+      padding: 1.4rem 1rem; text-align: center;
+    }
+    .adj-col.left { background: rgba(124,147,179,0.16); }
+    .adj-col.right { background: rgba(242,169,59,0.18); }
+    .adj-head { font-weight: 800; font-size: 1.05rem; color: var(--paper); margin-bottom: .3rem; }
+    .adj-main { font-weight: 900; font-size: clamp(1.2rem, 2.6vw, 1.6rem); color: var(--white); margin: .4rem 0; }
+    .adj-sub { color: var(--blue-gray); font-size: .95rem; margin-top: .3rem; }
+    .adj-title-bar {
+      grid-column: 1 / -1;
+      background: var(--navy-800);
+      color: var(--amber); font-weight: 800;
+      padding: .6rem; font-size: 1rem;
+      text-align: center;
+    }
+
+    /* ---------- Controls ---------- */
+    #controls {
+      position: fixed; left: 0; right: 0; bottom: 0;
+      height: 64px; z-index: 200;
+      display: flex; align-items: center; gap: 12px;
+      padding: 0 18px;
+      background: linear-gradient(0deg, rgba(10,24,48,0.98), rgba(10,24,48,0.85));
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .ctrl-btn {
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.06);
+      color: var(--white); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: background .2s ease;
+    }
+    .ctrl-btn:hover { background: rgba(255,255,255,0.16); }
+    .ctrl-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .progress-track {
+      flex: 1; height: 6px; border-radius: 999px;
+      background: rgba(255,255,255,0.1); overflow: hidden;
+    }
+    .progress-fill { height: 100%; background: var(--amber); width: 0%; transition: width .35s ease; }
+    #pageIndicator {
+      font-weight: 700; font-size: .95rem; color: var(--blue-gray);
+      white-space: nowrap; min-width: 62px; text-align: center;
+    }
+    .ctrl-text-btn {
+      display: flex; align-items: center; gap: 6px;
+      border: 1.5px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.06);
+      color: var(--white); cursor: pointer;
+      padding: 8px 14px; border-radius: 999px;
+      font-size: .9rem; font-weight: 700; flex-shrink: 0;
+      transition: background .2s ease;
+    }
+    .ctrl-text-btn:hover { background: rgba(255,255,255,0.16); }
+    .ctrl-text-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ---------- TOC overlay ---------- */
+    #tocOverlay {
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(6,14,28,0.88);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; visibility: hidden;
+      transition: opacity .25s ease;
+      padding: 20px;
+    }
+    #tocOverlay.show { opacity: 1; visibility: visible; }
+    .toc-panel {
+      background: var(--navy-900);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius-lg);
+      padding: 1.6rem; max-width: 780px; width: 100%;
+      max-height: 80vh; overflow-y: auto;
+      box-shadow: var(--shadow-card);
+    }
+    .toc-title { font-size: 1.3rem; font-weight: 900; color: var(--amber); margin-bottom: 1rem; }
+    .toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+    .toc-item {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-sm);
+      padding: .8rem 1rem; cursor: pointer;
+      transition: background .2s ease;
+    }
+    .toc-item:hover { background: rgba(255,255,255,0.12); }
+    .toc-item .n { font-size: .8rem; color: var(--blue-gray); font-weight: 700; }
+    .toc-item .t { font-size: 1rem; font-weight: 700; color: var(--white); margin-top: .2rem; }
+    .toc-close {
+      margin-top: 1.2rem; width: 100%;
+      background: var(--amber); color: var(--amber-ink);
+      border: none; border-radius: var(--radius-sm);
+      padding: .8rem; font-weight: 800; font-size: 1rem;
+      cursor: pointer;
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 820px) {
+      .compare-wrap { grid-template-columns: 1fr; }
+      .compare-arrow { transform: rotate(90deg); }
+      .student-scene-row { grid-template-columns: 1fr; }
+      .split-wrap { grid-template-columns: 1fr; }
+      .grid-3 { grid-template-columns: 1fr; }
+      .grid-4 { grid-template-columns: 1fr 1fr; }
+      .adj-diagram { grid-template-columns: 1fr; }
+      .toc-grid { grid-template-columns: 1fr; }
+      .slide { padding: 1.4rem 1.1rem 5.5rem; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="platform-topbar">
+    <div class="ptb-brand"><span class="ptb-logo">🎓</span><span>115學年度 三年23班｜國三班親會資訊平台</span></div>
+    <div class="ptb-links">
+      <a href="index.html" class="ptb-link">🏠 平台首頁</a>
+      <a href="calendar.html" class="ptb-link">📅 升學行事曆</a>
+      <a href="daily-safety.html" class="ptb-link">🛡️ 生活與安全</a>
+      <a href="conduct-dress-code.html" class="ptb-link">👔 守時與服儀</a>
+      <a href="class-fund-snack.html" class="ptb-link">💰 班費與點心</a>
+      <a href="exam-change.html" class="ptb-link active">📚 段考變革</a>
+    </div>
+  </div>
+
+  <div class="deck-container">
+
+    <!-- 第1頁：封面 -->
+    <section class="slide cover" data-title="國三段考變革通知">
+      <div class="slide-deco-grid"></div>
+      <div class="cover-kicker">國三家長說明</div>
+      <div class="cover-illust">
+        <svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+          <rect x="40" y="170" width="320" height="14" rx="7" fill="#1E4570"/>
+          <rect x="70" y="70" width="90" height="100" rx="8" fill="#FFFFFF"/>
+          <rect x="82" y="86" width="66" height="8" rx="4" fill="#F2A93B"/>
+          <rect x="82" y="102" width="50" height="6" rx="3" fill="#7C93B3"/>
+          <rect x="82" y="116" width="58" height="6" rx="3" fill="#7C93B3"/>
+          <rect x="82" y="130" width="44" height="6" rx="3" fill="#7C93B3"/>
+          <circle cx="118" cy="150" r="9" fill="none" stroke="#2C5A8C" stroke-width="2"/>
+          <path d="M112 150 h12 M118 144 v12" stroke="#2C5A8C" stroke-width="1.6"/>
+          <rect x="200" y="60" width="120" height="150" rx="10" fill="#0E2141" stroke="#F2A93B" stroke-width="2"/>
+          <rect x="216" y="80" width="88" height="10" rx="5" fill="#F2A93B"/>
+          <rect x="216" y="100" width="88" height="6" rx="3" fill="#7C93B3"/>
+          <rect x="216" y="112" width="70" height="6" rx="3" fill="#7C93B3"/>
+          <rect x="216" y="130" width="88" height="6" rx="3" fill="#7C93B3"/>
+          <rect x="216" y="142" width="60" height="6" rx="3" fill="#7C93B3"/>
+          <path d="M300 175 l10 10 20 -24" stroke="#2C7A57" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="330" cy="70" r="16" fill="#F2A93B"/>
+          <path d="M323 70 h14 M330 63 v14" stroke="#5A3B08" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h1 class="cover-title">國三段考變革通知</h1>
+      <p class="cover-sub">提早複習生物，建立會考準備節奏</p>
+      <div class="cover-tags">
+        <span class="pill">以考促學</span>
+        <span class="pill">重溫舊知</span>
+        <span class="pill">提早準備</span>
+      </div>
+    </section>
+
+    <!-- 第2頁：這次改了什麼 -->
+    <section class="slide" data-title="這次改了什麼？">
+      <div class="slide-deco-grid"></div>
+      <div class="slide-eyebrow">變革內容</div>
+      <h2 class="slide-title">這次段考，有<span class="accent">一項調整</span></h2>
+      <div class="slide-body">
+        <div class="compare-wrap seq">
+          <div class="compare-box before">
+            <div class="compare-label">原本</div>
+            <div class="compare-value">自習時間</div>
+          </div>
+          <div class="compare-arrow">→</div>
+          <div class="compare-box after">
+            <div class="compare-label">本次</div>
+            <div class="compare-value">加考生物科</div>
+          </div>
+        </div>
+        <div class="highlight-strip seq">
+          <div class="line">減少一節國三自習課</div>
+          <div class="line">改為加考「生物科」</div>
+        </div>
+        <div class="adj-diagram seq">
+          <div class="adj-title-bar">段考期間時間安排</div>
+          <div class="adj-col left">
+            <div class="adj-head">原安排</div>
+            <div class="adj-main">自習時間</div>
+            <div class="adj-sub">↓ 自主複習</div>
+          </div>
+          <div class="adj-col right">
+            <div class="adj-head">本次調整</div>
+            <div class="adj-main">生物科測驗</div>
+            <div class="adj-sub">↓ 重溫國一生物</div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer plain">不是增加整體學習負擔，而是調整段考期間的一節自習時段，改用來進行生物科測驗。</div>
+    </section>
+
+    <!-- 第3頁：為什麼要加考生物 -->
+    <section class="slide" data-title="為什麼要加考生物？">
+      <div class="slide-deco-grid"></div>
+      <div class="slide-eyebrow">變革原因</div>
+      <h2 class="slide-title">為什麼國三還要<span class="accent">複習國一生物？</span></h2>
+      <div class="slide-body">
+        <div class="student-scene-row seq">
+          <div class="student-scene">
+            <svg viewBox="0 0 200 200">
+              <circle cx="100" cy="60" r="26" fill="#F5F7FA"/>
+              <path d="M74 60 a26 26 0 0 1 52 0" fill="#163457"/>
+              <rect x="60" y="90" width="80" height="70" rx="14" fill="#2C5A8C"/>
+              <rect x="70" y="105" width="60" height="42" rx="6" fill="#FFFFFF"/>
+              <rect x="78" y="114" width="44" height="5" rx="2.5" fill="#F2A93B"/>
+              <rect x="78" y="124" width="34" height="5" rx="2.5" fill="#7C93B3"/>
+              <rect x="78" y="134" width="40" height="5" rx="2.5" fill="#7C93B3"/>
+            </svg>
+            <div class="cap">國一時學過</div>
+          </div>
+          <div class="mid-tag">兩年後</div>
+          <div class="student-scene">
+            <svg viewBox="0 0 200 200">
+              <circle cx="100" cy="60" r="26" fill="#F5F7FA"/>
+              <path d="M74 60 a26 26 0 0 1 52 0" fill="#163457"/>
+              <rect x="60" y="90" width="80" height="70" rx="14" fill="#D98A1E"/>
+              <rect x="70" y="105" width="60" height="42" rx="6" fill="#FFFFFF"/>
+              <rect x="78" y="114" width="44" height="5" rx="2.5" fill="#F2A93B"/>
+              <rect x="78" y="124" width="34" height="5" rx="2.5" fill="#7C93B3"/>
+              <rect x="78" y="134" width="40" height="5" rx="2.5" fill="#7C93B3"/>
+              <path d="M150 70 q14 -4 16 10" stroke="#2C7A57" stroke-width="3" fill="none" stroke-linecap="round"/>
+            </svg>
+            <div class="cap">國三再次複習</div>
+          </div>
+        </div>
+        <div class="timeline-wrap seq">
+          <div class="tl-node">國一：學習生物</div>
+          <div class="tl-arrow">→</div>
+          <div class="tl-node dim">兩年後</div>
+          <div class="tl-arrow">→</div>
+          <div class="tl-node warn">部分內容生疏</div>
+          <div class="tl-arrow">→</div>
+          <div class="tl-node">國三：重新複習</div>
+          <div class="tl-arrow">→</div>
+          <div class="tl-node">會考自然科準備</div>
+        </div>
+      </div>
+      <div class="slide-footer plain">國一生物是會考自然科複習中需要重視的舊知內容，學校希望利用段考時段協助國三學生提前複習。</div>
+    </section>
+
+    <!-- 第4頁：以考促學 -->
+    <section class="slide" data-title="這次調整的核心：以考促學">
+      <div class="slide-deco-grid"></div>
+      <div class="slide-eyebrow">核心邏輯</div>
+      <h2 class="slide-title">這次調整的核心：<span class="accent">以考促學</span></h2>
+      <div class="slide-body">
+        <div class="flow-wrap seq">
+          <div class="flow-step">平常複習</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">納入國一生物</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step core">段考加考生物</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">檢視複習成果</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">逐步建立會考複習節奏</div>
+        </div>
+        <div class="note-strip seq">
+          不是等到九年級下學期才開始大量回頭複習，<br>
+          而是在平常段考準備時，就逐步把舊知重新找回來。
+        </div>
+      </div>
+      <div class="slide-footer">以考促學</div>
+    </section>
+
+    <!-- 第5頁：情境示意 -->
+    <section class="slide" data-title="情境示意：提早準備 vs 最後回頭複習">
+      <div class="slide-deco-grid"></div>
+      <div class="slide-eyebrow">情境示意</div>
+      <h2 class="slide-title">孩子可能遇到的<span class="accent">兩種狀況</span></h2>
+      <div class="slide-body">
+        <div class="split-wrap seq">
+          <div class="split-card">
+            <span class="split-tag split-tag-neg">沒有提早複習</span>
+            <svg viewBox="0 0 220 180">
+              <rect x="20" y="120" width="180" height="14" rx="7" fill="#E4E9F0"/>
+              <rect x="60" y="70" width="30" height="50" rx="4" fill="#7C93B3"/>
+              <rect x="95" y="60" width="30" height="60" rx="4" fill="#2C5A8C"/>
+              <rect x="130" y="75" width="30" height="45" rx="4" fill="#D98A1E"/>
+              <circle cx="115" cy="40" r="16" fill="#F5F7FA"/>
+              <path d="M99 40 a16 16 0 0 1 32 0" fill="#163457"/>
+              <path d="M105 46 q10 6 20 0" stroke="#C0472E" stroke-width="2" fill="none" stroke-linecap="round"/>
+            </svg>
+            <div class="speech-bubble">「怎麼突然要複習這麼多以前的內容？」</div>
+            <div class="split-caption">九年級下學期才大量回頭複習</div>
+          </div>
+          <div class="split-card">
+            <span class="split-tag split-tag-pos">提早建立複習節奏</span>
+            <svg viewBox="0 0 220 180">
+              <rect x="20" y="120" width="180" height="14" rx="7" fill="#E4E9F0"/>
+              <rect x="95" y="70" width="30" height="50" rx="4" fill="#2C7A57"/>
+              <circle cx="110" cy="40" r="16" fill="#F5F7FA"/>
+              <path d="M94 40 a16 16 0 0 1 32 0" fill="#163457"/>
+              <path d="M102 44 q8 5 16 0" stroke="#2C7A57" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <rect x="90" y="128" width="40" height="26" rx="3" fill="#FFFFFF" stroke="#2C7A57" stroke-width="1.5"/>
+              <rect x="96" y="134" width="28" height="4" rx="2" fill="#F2A93B"/>
+              <rect x="96" y="142" width="20" height="4" rx="2" fill="#7C93B3"/>
+            </svg>
+            <div class="speech-bubble">「這次段考順便把國一生物複習一下！」</div>
+            <div class="split-caption">平常就逐步複習</div>
+          </div>
+        </div>
+        <div class="vs-row seq">
+          <span class="vs-word">提早準備</span>
+          <span class="vs-mid">VS</span>
+          <span class="vs-word">最後才大量回頭複習</span>
+        </div>
+        <div class="disclaimer">此為情境示意，並非必然結果</div>
+      </div>
+      <div class="slide-footer plain">段考加考生物，是希望協助孩子建立平時複習的節奏。</div>
+    </section>
+
+    <!-- 第6頁：建立習慣 -->
+    <section class="slide" data-title="不只是考一次，而是建立複習節奏">
+      <div class="slide-deco-grid"></div>
+      <div class="slide-eyebrow">學習習慣</div>
+      <h2 class="slide-title">不只是考一次，<span class="accent">而是建立複習節奏</span></h2>
+      <div class="slide-body">
+        <div class="grid-3 seq">
+          <div class="num-card">
+            <div class="num-mark">①</div>
+            <div class="num-title">重溫舊知</div>
+            <div class="num-desc">把兩年前學過的生物內容重新找回來</div>
+          </div>
+          <div class="num-card">
+            <div class="num-mark">②</div>
+            <div class="num-title">平時累積</div>
+            <div class="num-desc">利用平常段考複習時，逐步安排生物複習</div>
+          </div>
+          <div class="num-card">
+            <div class="num-mark">③</div>
+            <div class="num-title">提早準備</div>
+            <div class="num-desc">不要等到九年級下學期才開始大量回頭複習</div>
+          </div>
+        </div>
+        <div class="summary-banner seq">
+          <div class="l1">把複習提早一點，讓準備更有節奏。</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 第7頁：家長可以怎麼協助 -->
+    <section class="slide" data-title="家長在家可以幫孩子做什麼？">
+      <div class="slide-deco-grid"></div>
+      <div class="slide-eyebrow">家校合作</div>
+      <h2 class="slide-title">家長在家<span class="accent">可以幫孩子做什麼？</span></h2>
+      <div class="slide-body">
+        <div class="grid-4 seq">
+          <div class="num-card">
+            <div class="num-mark">①</div>
+            <div class="num-title">提醒</div>
+            <div class="num-desc">提醒孩子段考複習時不要忽略生物</div>
+          </div>
+          <div class="num-card">
+            <div class="num-mark">②</div>
+            <div class="num-title">鼓勵</div>
+            <div class="num-desc">鼓勵孩子撥出時間重新複習國一生物</div>
+          </div>
+          <div class="num-card">
+            <div class="num-mark">③</div>
+            <div class="num-title">陪伴</div>
+            <div class="num-desc">適度關心孩子目前複習進度</div>
+          </div>
+          <div class="num-card">
+            <div class="num-mark">④</div>
+            <div class="num-title">建立習慣</div>
+            <div class="num-desc">讓生物複習逐漸成為平常準備的一部分</div>
+          </div>
+        </div>
+        <div class="summary-banner seq">
+          <div class="l1">家長不需要代替孩子讀書</div>
+          <div class="l2">而是幫孩子把「複習生物」排進計畫裡</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 第8頁：最重要一件事 -->
+    <section class="slide" data-title="這次不是單純多考一科">
+      <div class="slide-deco-grid"></div>
+      <div class="slide-body keypoint-wrap seq">
+        <h2 class="keypoint-title">這次不是單純「多考一科」</h2>
+        <div class="word-chain">
+          <span class="word-chip">重溫舊知</span>
+          <span class="arrow">→</span>
+          <span class="word-chip">以考促學</span>
+          <span class="arrow">→</span>
+          <span class="word-chip">提早準備</span>
+        </div>
+        <div class="keypoint-sub">
+          段考複習時，請孩子把「國一生物」<br>一起排進複習計畫
+        </div>
+      </div>
+    </section>
+
+    <!-- 第9頁：結語 -->
+    <section class="slide closing" data-title="結語">
+      <div class="slide-deco-grid"></div>
+      <h2 class="closing-title">提早一點準備<br>讓國三的複習更有節奏</h2>
+      <div class="closing-words">
+        <span class="closing-word">重溫舊知</span>
+        <span class="closing-word">以考促學</span>
+        <span class="closing-word">提早準備</span>
+      </div>
+      <div class="closing-thanks">
+        請家長在家中多加鼓勵並督促孩子撥出時間複習生物，提早為會考做好準備。<br><br>
+        感謝家長的支持與配合。
+      </div>
+    </section>
+
+  </div>
+
+  <div id="controls">
+    <button class="ctrl-btn" id="prevBtn" title="上一頁 (←)">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" /></svg>
+    </button>
+
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div id="pageIndicator">01 / 09</div>
+
+    <button class="ctrl-btn" id="nextBtn" title="下一頁 (→ / Space)">
+      <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
+    </button>
+
+    <button class="ctrl-text-btn" id="tocBtn" title="目錄導覽">
+      <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+      <span>目錄</span>
+    </button>
+
+    <button class="ctrl-text-btn" id="fsBtn" title="全螢幕 (F)">
+      <svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" /></svg>
+      <span>全螢幕</span>
+    </button>
+  </div>
+
+  <div id="tocOverlay">
+    <div class="toc-panel">
+      <div class="toc-title">簡報目錄</div>
+      <div class="toc-grid" id="tocGrid"></div>
+      <button class="toc-close" id="tocCloseBtn">關閉目錄</button>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+      var total = slides.length;
+      var current = 0;
+
+      var prevBtn = document.getElementById('prevBtn');
+      var nextBtn = document.getElementById('nextBtn');
+      var tocBtn = document.getElementById('tocBtn');
+      var fsBtn = document.getElementById('fsBtn');
+      var tocOverlay = document.getElementById('tocOverlay');
+      var tocCloseBtn = document.getElementById('tocCloseBtn');
+      var tocGrid = document.getElementById('tocGrid');
+      var pageIndicator = document.getElementById('pageIndicator');
+      var progressFill = document.getElementById('progressFill');
+
+      function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+      slides.forEach(function (s, i) {
+        var item = document.createElement('div');
+        item.className = 'toc-item';
+        item.innerHTML = '<div class="n">' + pad(i + 1) + ' / ' + pad(total) + '</div><div class="t">' + s.getAttribute('data-title') + '</div>';
+        item.addEventListener('click', function () {
+          goTo(i);
+          closeToc();
+        });
+        tocGrid.appendChild(item);
+      });
+
+      function render(direction) {
+        slides.forEach(function (s, i) {
+          s.classList.remove('active', 'exit-left');
+          if (i === current) {
+            s.classList.add('active');
+            s.scrollTop = 0;
+          } else if (direction === 'next' && i < current) {
+            s.classList.add('exit-left');
+          }
+        });
+        pageIndicator.textContent = pad(current + 1) + ' / ' + pad(total);
+        progressFill.style.width = ((current + 1) / total * 100) + '%';
+      }
+
+      function goTo(index) {
+        if (index < 0) index = 0;
+        if (index > total - 1) index = total - 1;
+        var direction = index > current ? 'next' : 'prev';
+        current = index;
+        render(direction);
+      }
+
+      function next() { if (current < total - 1) goTo(current + 1); }
+      function prev() { if (current > 0) goTo(current - 1); }
+
+      prevBtn.addEventListener('click', prev);
+      nextBtn.addEventListener('click', next);
+
+      function openToc() { tocOverlay.classList.add('show'); }
+      function closeToc() { tocOverlay.classList.remove('show'); }
+      tocBtn.addEventListener('click', openToc);
+      tocCloseBtn.addEventListener('click', closeToc);
+      tocOverlay.addEventListener('click', function (e) {
+        if (e.target === tocOverlay) closeToc();
+      });
+
+      function toggleFullscreen() {
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+          var el = document.documentElement;
+          if (el.requestFullscreen) el.requestFullscreen();
+          else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+        } else {
+          if (document.exitFullscreen) document.exitFullscreen();
+          else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+        }
+      }
+      fsBtn.addEventListener('click', toggleFullscreen);
+
+      window.addEventListener('keydown', function (e) {
+        if (tocOverlay.classList.contains('show')) {
+          if (e.key === 'Escape') closeToc();
+          return;
+        }
+        if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+        else if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+        else if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+        else if (e.key === 'End') { e.preventDefault(); goTo(total - 1); }
+        else if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); }
+      });
+
+      var touchStartX = 0;
+      var touchStartY = 0;
+
+      document.addEventListener('touchstart', function (e) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+      }, { passive: true });
+
+      document.addEventListener('touchend', function (e) {
+        var touchEndX = e.changedTouches[0].clientX;
+        var touchEndY = e.changedTouches[0].clientY;
+        var diffX = touchEndX - touchStartX;
+        var diffY = touchEndY - touchStartY;
+
+        if (Math.abs(diffX) > 45 && Math.abs(diffX) > Math.abs(diffY) * 1.5) {
+          if (diffX < 0) next();
+          else prev();
+        }
+      }, { passive: true });
+
+      render('next');
+    })();
+  </script>
+</body>
+
+</html>

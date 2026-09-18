@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>115學年度 國三升學重大行事曆</title>
+<style>
+  :root{
+    --bg-0:#070b14;
+    --bg-1:#0d1526;
+    --bg-2:#131d34;
+    --bg-3:#1a2740;
+    --line:#28395c;
+    --text-0:#f7f9fc;
+    --text-1:#c7d2e6;
+    --text-2:#8fa0c2;
+    --text-dim:#5d6d8f;
+
+    --c-mock:#3fa9f5;      /* 模擬考 藍 */
+    --c-mock-bg:rgba(63,169,245,0.14);
+    --c-exam:#a98cf5;      /* 段考 紫 */
+    --c-exam-bg:rgba(169,140,245,0.14);
+    --c-final:#ff5d6c;     /* 會考 紅 - 最醒目 */
+    --c-final-bg:rgba(255,93,108,0.16);
+    --c-school:#3fd6a6;    /* 校務/活動 綠 */
+    --c-school-bg:rgba(63,214,166,0.14);
+    --c-admin:#f5b93f;     /* 升學/行政 黃 */
+    --c-admin-bg:rgba(245,185,63,0.14);
+
+    --radius:14px;
+    --font: "Noto Sans TC","Microsoft JhengHei",sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;padding:0;height:100%;
+    background:var(--bg-0);
+    color:var(--text-0);
+    font-family:var(--font);
+    -webkit-font-smoothing:antialiased;
+    overflow:hidden;
+  }
+  body.scroll-ok{overflow:auto;}
+
+  /* ============ PLATFORM TOPBAR (共用導覽列) ============ */
+  .platform-topbar{
+    position:fixed;top:0;left:0;right:0;height:44px;z-index:99999;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:0 20px;
+    background:linear-gradient(180deg,#0E2141,#0A1830);
+    border-bottom:1px solid rgba(242,169,59,0.35);
+    font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif;
+    box-shadow:0 2px 10px rgba(0,0,0,0.35);
+  }
+  .platform-topbar .ptb-brand{
+    display:flex;align-items:center;gap:8px;color:#F2A93B;font-weight:800;
+    font-size:14px;letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .platform-topbar .ptb-brand .ptb-logo{font-size:16px;}
+  .platform-topbar .ptb-links{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;}
+  .platform-topbar .ptb-links::-webkit-scrollbar{display:none;}
+  .platform-topbar a.ptb-link{
+    flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;
+    color:#C7D2E6;text-decoration:none;font-size:12.5px;font-weight:700;
+    padding:6px 12px;border-radius:999px;border:1px solid rgba(255,255,255,0.14);
+    background:rgba(255,255,255,0.04);transition:all .2s ease;white-space:nowrap;
+  }
+  .platform-topbar a.ptb-link:hover{background:rgba(255,255,255,0.1);color:#fff;}
+  .platform-topbar a.ptb-link.active{background:#F2A93B;border-color:#F2A93B;color:#0A1830;}
+  :fullscreen .platform-topbar,:-webkit-full-screen .platform-topbar{display:none !important;}
+  :fullscreen .app,:-webkit-full-screen .app{margin-top:0 !important;height:100vh !important;}
+  @media (max-width:1024px){
+    .platform-topbar{height:auto;flex-wrap:wrap;padding:8px 12px;gap:8px;}
+    .platform-topbar .ptb-brand{font-size:12px;}
+    .platform-topbar a.ptb-link{font-size:11px;padding:5px 10px;}
+  }
+
+  .app{
+    display:flex;
+    flex-direction:column;
+    height:calc(100vh - 44px);
+    margin-top:44px;
+    width:100vw;
+  }
+
+  /* ============ HEADER ============ */
+  .top-bar{
+    flex:0 0 auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:clamp(10px, 1.5vw, 14px) clamp(16px, 3vw, 32px);
+    background:linear-gradient(180deg,var(--bg-2),var(--bg-1));
+    border-bottom:1px solid var(--line);
+  }
+  .top-bar .title-block{display:flex;flex-direction:column;gap:2px;}
+  .top-bar .main-title{
+    font-size:clamp(18px,2.1vw,34px);
+    font-weight:900;
+    letter-spacing:0.5px;
+  }
+  .top-bar .sub-title{
+    font-size:clamp(11px,1vw,16px);
+    color:var(--text-2);
+    font-weight:500;
+  }
+  .top-bar .class-tag{
+    font-size:clamp(11px,1vw,15px);
+    color:var(--text-dim);
+    font-weight:600;
+    margin-top:2px;
+  }
+  .top-bar .date-block{
+    text-align:right;
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+  }
+  .top-bar .date-block .date-main{
+    font-size:clamp(16px,1.8vw,28px);
+    font-weight:800;
+  }
+  .top-bar .date-block .date-week{
+    font-size:clamp(12px,1.1vw,18px);
+    color:var(--c-mock);
+    font-weight:700;
+  }
+
+  /* ============ NAV TABS ============ */
+  .view-tabs{
+    flex:0 0 auto;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:8px clamp(16px, 3vw, 32px);
+    background:var(--bg-1);
+    border-bottom:1px solid var(--line);
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .view-tabs::-webkit-scrollbar{display:none;}
+  .tab-btn{
+    flex:0 0 auto;
+    appearance:none;border:1px solid var(--line);
+    background:var(--bg-2);color:var(--text-1);
+    font-family:var(--font);
+    padding:6px 14px;border-radius:999px;
+    font-size:clamp(12px,1vw,16px);
+    font-weight:700;cursor:pointer;
+    transition:all .2s ease;
+    white-space:nowrap;
+  }
+  .tab-btn:hover{background:var(--bg-3);}
+  .tab-btn.active{
+    background:var(--c-mock);
+    border-color:var(--c-mock);
+    color:#04101f;
+  }
+  .tab-spacer{flex:1;}
+  .ctrl-btn{
+    flex:0 0 auto;
+    appearance:none;border:1px solid var(--line);
+    background:var(--bg-2);color:var(--text-1);
+    font-family:var(--font);
+    padding:6px 12px;border-radius:999px;
+    font-size:clamp(11px,0.9vw,14px);
+    font-weight:700;cursor:pointer;
+    display:flex;align-items:center;gap:6px;
+    white-space:nowrap;
+  }
+  .ctrl-btn:hover{background:var(--bg-3);}
+  .ctrl-btn .dot{width:8px;height:8px;border-radius:50%;background:var(--text-dim);}
+  .ctrl-btn.on .dot{background:#3fd6a6;box-shadow:0 0 6px #3fd6a6;}
+
+  /* ============ MAIN ============ */
+  main{
+    flex:1 1 auto;
+    position:relative;
+    min-height:0;
+  }
+  .view{
+    position:absolute;
+    inset:0;
+    padding:clamp(12px, 2vw, 18px) clamp(16px, 3vw, 32px) 10px clamp(16px, 3vw, 32px);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .6s ease;
+    display:flex;
+    flex-direction:column;
+    min-height:0;
+  }
+  .view.active{
+    opacity:1;
+    pointer-events:auto;
+  }
+  #view-today{overflow:hidden;}
+  #view-timeline{overflow-y:auto;}
+  #view-exams{overflow-y:auto;}
+
+  /* ============ VIEW 1: 今日焦點 ============ */
+  .today-grid{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    height:100%;
+    min-height:0;
+  }
+  .hero-row{
+    display:flex;
+    gap:16px;
+    flex:1.6 1 0;
+    min-height:0;
+  }
+  .countdown-card{
+    flex:0 0 40%;
+    background:radial-gradient(circle at 30% 20%, rgba(255,93,108,0.22), transparent 60%), var(--bg-2);
+    border:1px solid var(--c-final);
+    border-radius:var(--radius);
+    padding:clamp(16px, 2vw, 20px) clamp(18px, 2vw, 26px);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    gap:6px;
+    box-shadow:0 0 30px rgba(255,93,108,0.08) inset;
+  }
+  .countdown-card .exam-name{
+    font-size:clamp(14px,1.5vw,20px);
+    font-weight:800;
+    color:var(--c-final);
+    letter-spacing:2px;
+  }
+  .countdown-card .exam-date{
+    font-size:clamp(12px,1.2vw,17px);
+    color:var(--text-2);
+    font-weight:600;
+  }
+  .countdown-card .cd-label{
+    margin-top:10px;
+    font-size:clamp(13px,1.3vw,20px);
+    color:var(--text-1);
+    font-weight:700;
+  }
+  .countdown-card .cd-number{
+    font-size:clamp(42px,6vw,92px);
+    font-weight:900;
+    color:#fff;
+    line-height:1.05;
+    text-shadow:0 0 24px rgba(255,93,108,0.55);
+  }
+  .countdown-card .cd-number span{
+    font-size:0.42em;
+    color:var(--c-final);
+    margin-left:6px;
+    font-weight:800;
+  }
+
+  .nextup-card{
+    flex:1;
+    background:var(--bg-2);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:clamp(16px, 2vw, 20px) clamp(18px, 2vw, 26px);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    gap:10px;
+    min-width:0;
+  }
+  .nextup-card .eyebrow{
+    font-size:clamp(11px,1vw,15px);
+    color:var(--c-mock);
+    font-weight:800;
+    letter-spacing:3px;
+  }
+  .nextup-card .eyebrow-sub{
+    font-size:clamp(11px,1vw,15px);
+    color:var(--text-2);
+    font-weight:600;
+  }
+  .nextup-card .nu-title{
+    font-size:clamp(20px,2.6vw,42px);
+    font-weight:900;
+    color:var(--text-0);
+    line-height:1.2;
+  }
+  .nextup-card .nu-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    align-items:baseline;
+    margin-top:4px;
+  }
+  .nextup-card .nu-date{
+    font-size:clamp(14px,1.5vw,24px);
+    font-weight:800;
+    color:var(--text-1);
+  }
+  .nextup-card .nu-week{
+    font-size:clamp(12px,1.2vw,19px);
+    color:var(--text-2);
+    font-weight:700;
+  }
+  .nextup-card .nu-time{
+    font-size:clamp(11px,1.1vw,17px);
+    color:var(--c-admin);
+    font-weight:700;
+  }
+  .nextup-card .nu-countdown{
+    margin-top:6px;
+    font-size:clamp(16px,1.7vw,26px);
+    font-weight:900;
+    color:var(--c-mock);
+  }
+  .nextup-card .nu-badge{
+    display:inline-block;
+    margin-top:2px;
+    padding:4px 12px;
+    border-radius:999px;
+    font-size:clamp(10px,0.85vw,13px);
+    font-weight:800;
+    letter-spacing:1px;
+    width:fit-content;
+  }
+
+  .next-exam-bar{
+    flex:0 0 auto;
+    background:var(--c-exam-bg);
+    border:1px solid var(--c-exam);
+    border-radius:var(--radius);
+    padding:10px clamp(16px, 2vw, 24px);
+    display:flex;
+    align-items:center;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .next-exam-bar .label-tag{
+    font-size:clamp(11px,0.9vw,15px);
+    font-weight:900;
+    color:var(--c-exam);
+    letter-spacing:2px;
+    white-space:nowrap;
+  }
+  .next-exam-bar .ne-title{
+    font-size:clamp(14px,1.3vw,22px);
+    font-weight:800;
+    color:var(--text-0);
+  }
+  .next-exam-bar .ne-date{
+    font-size:clamp(12px,1vw,17px);
+    color:var(--text-2);
+    font-weight:600;
+  }
+  .next-exam-bar .ne-days{
+    margin-left:auto;
+    font-size:clamp(14px,1.4vw,24px);
+    font-weight:900;
+    color:var(--c-exam);
+    white-space:nowrap;
+  }
+
+  .upcoming-section{
+    flex:1.4 1 0;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    min-height:0;
+  }
+  .upcoming-section .sec-title{
+    font-size:clamp(12px,1vw,16px);
+    font-weight:800;
+    color:var(--text-2);
+    letter-spacing:2px;
+  }
+  .upcoming-list{
+    flex:1;
+    display:flex;
+    gap:12px;
+    min-height:0;
+    overflow-x:auto;
+    scrollbar-width:none;
+    scroll-snap-type:x proximity;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:4px;
+  }
+  .upcoming-list::-webkit-scrollbar{display:none;}
+  .up-card{
+    flex:1;
+    min-width:140px;
+    background:var(--bg-2);
+    border:1px solid var(--line);
+    border-left:4px solid var(--text-dim);
+    border-radius:12px;
+    padding:12px 14px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    scroll-snap-align:start;
+  }
+  .up-card.cat-mock{border-left-color:var(--c-mock);}
+  .up-card.cat-examMid{border-left-color:var(--c-exam);}
+  .up-card.cat-final{border-left-color:var(--c-final);background:var(--c-final-bg);}
+  .up-card.cat-school{border-left-color:var(--c-school);}
+  .up-card.cat-admin{border-left-color:var(--c-admin);}
+  .up-card .up-date{
+    font-size:clamp(16px,1.5vw,24px);
+    font-weight:900;
+    color:var(--text-0);
+  }
+  .up-card .up-week{
+    font-size:clamp(10px,0.85vw,13px);
+    color:var(--text-2);
+    font-weight:600;
+    margin-bottom:6px;
+  }
+  .up-card .up-title{
+    font-size:clamp(12px,1.05vw,17px);
+    font-weight:800;
+    color:var(--text-0);
+    line-height:1.3;
+    overflow:hidden;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+  }
+  .up-card .up-foot{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:8px;
+  }
+  .up-card .up-cat{
+    font-size:clamp(10px,0.75vw,12px);
+    color:var(--text-dim);
+    font-weight:700;
+  }
+  .up-card .up-dday{
+    font-size:clamp(10px,0.9vw,14px);
+    font-weight:800;
+    color:var(--c-mock);
+  }
+  .up-card.is-today{border-left-color:#fff;box-shadow:0 0 0 2px #fff inset;}
+  .up-card.is-today .up-dday{color:#fff;}
+
+  .progress-section{
+    flex:0 0 auto;
+    background:var(--bg-2);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:10px clamp(16px, 2vw, 22px);
+    display:flex;
+    align-items:center;
+    gap:16px;
+  }
+  .progress-section .pg-label{
+    font-size:clamp(11px,1vw,16px);
+    font-weight:800;
+    color:var(--text-1);
+    white-space:nowrap;
+  }
+  .progress-track{
+    flex:1;
+    height:10px;
+    background:var(--bg-3);
+    border-radius:999px;
+    overflow:hidden;
+    border:1px solid var(--line);
+  }
+  .progress-fill{
+    height:100%;
+    background:linear-gradient(90deg,var(--c-mock),var(--c-exam));
+    border-radius:999px;
+    transition:width .6s ease;
+  }
+  .progress-section .pg-pct{
+    font-size:clamp(12px,1.1vw,18px);
+    font-weight:900;
+    color:var(--text-0);
+    min-width:48px;
+    text-align:right;
+  }
+
+  /* ============ VIEW 2: 國三時間軸 ============ */
+  .timeline-toolbar{
+    flex:0 0 auto;
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
+    padding-bottom:14px;
+  }
+  .month-nav{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;}
+  .month-nav::-webkit-scrollbar{display:none;}
+  .month-btn{
+    flex:0 0 auto;
+    appearance:none;border:1px solid var(--line);
+    background:var(--bg-2);color:var(--text-2);
+    font-family:var(--font);
+    padding:6px 12px;border-radius:8px;
+    font-size:clamp(11px,0.9vw,14px);
+    font-weight:700;cursor:pointer;
+  }
+  .month-btn.current{border-color:var(--c-mock);color:var(--c-mock);}
+  .filter-nav{display:flex;gap:6px;flex-wrap:nowrap;margin-left:auto;overflow-x:auto;scrollbar-width:none;}
+  .filter-nav::-webkit-scrollbar{display:none;}
+  .filter-btn{
+    flex:0 0 auto;
+    appearance:none;border:1px solid var(--line);
+    background:transparent;color:var(--text-2);
+    font-family:var(--font);
+    padding:6px 12px;border-radius:999px;
+    font-size:clamp(11px,0.85vw,13px);
+    font-weight:700;cursor:pointer;
+  }
+  .filter-btn.active{background:var(--text-0);color:var(--bg-0);border-color:var(--text-0);}
+
+  .timeline-body{flex:1;min-height:0;padding-bottom:24px;}
+  .month-section{margin-bottom:26px;}
+  .month-section h2{
+    font-size:clamp(18px,1.8vw,30px);
+    font-weight:900;
+    color:var(--text-0);
+    border-bottom:2px solid var(--line);
+    padding-bottom:8px;
+    margin:0 0 14px 0;
+    scroll-margin-top:20px;
+  }
+  .month-section h2 .yr{
+    font-size:0.5em;
+    color:var(--text-dim);
+    font-weight:700;
+    margin-left:8px;
+  }
+  .card-row{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));
+    gap:14px;
+  }
+  .now-marker{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin:10px 0 18px 0;
+    width:100%;
+  }
+  .now-marker::before,.now-marker::after{
+    content:"";flex:1;height:2px;
+    background:repeating-linear-gradient(90deg,var(--c-final) 0 8px, transparent 8px 14px);
+  }
+  .now-marker .now-tag{
+    background:var(--c-final);
+    color:#fff;
+    font-weight:900;
+    font-size:clamp(12px,1vw,16px);
+    padding:6px 14px;
+    border-radius:999px;
+    letter-spacing:1px;
+    white-space:nowrap;
+    box-shadow:0 0 16px rgba(255,93,108,0.5);
+  }
+
+  .ev-card{
+    background:var(--bg-2);
+    border:1px solid var(--line);
+    border-top:4px solid var(--text-dim);
+    border-radius:12px;
+    padding:12px 14px;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .ev-card.cat-mock{border-top-color:var(--c-mock);}
+  .ev-card.cat-examMid{border-top-color:var(--c-exam);}
+  .ev-card.cat-final{
+    border-top-color:var(--c-final);
+    background:var(--c-final-bg);
+    box-shadow:0 0 22px rgba(255,93,108,0.18);
+  }
+  .ev-card.cat-school{border-top-color:var(--c-school);}
+  .ev-card.cat-admin{border-top-color:var(--c-admin);}
+  .ev-card.status-done{opacity:0.45;}
+  .ev-card .ev-date{
+    font-size:clamp(15px,1.3vw,22px);
+    font-weight:900;
+    color:var(--text-0);
+  }
+  .ev-card .ev-week{
+    font-size:clamp(10px,0.8vw,13px);
+    color:var(--text-2);
+    font-weight:600;
+  }
+  .ev-card .ev-time{
+    font-size:clamp(10px,0.8vw,13px);
+    color:var(--c-admin);
+    font-weight:700;
+  }
+  .ev-card .ev-title{
+    font-size:clamp(13px,1.1vw,18px);
+    font-weight:800;
+    color:var(--text-0);
+    line-height:1.3;
+    margin-top:2px;
+  }
+  .ev-card .ev-cat{
+    font-size:clamp(10px,0.75vw,12px);
+    color:var(--text-dim);
+    font-weight:700;
+    margin-top:auto;
+  }
+  .ev-card .ev-status{
+    font-size:clamp(10px,0.8vw,13px);
+    font-weight:800;
+    padding:3px 10px;
+    border-radius:999px;
+    width:fit-content;
+  }
+  .ev-status.st-done{background:var(--bg-3);color:var(--text-dim);}
+  .ev-status.st-today{background:#fff;color:#04101f;}
+  .ev-status.st-tomorrow{background:var(--c-admin-bg);color:var(--c-admin);}
+  .ev-status.st-ongoing{background:var(--c-mock-bg);color:var(--c-mock);}
+  .ev-status.st-upcoming{background:var(--bg-3);color:var(--text-2);}
+  .ev-card .ev-mini-dates{
+    font-size:clamp(10px,0.85vw,13px);
+    color:var(--text-2);
+    line-height:1.6;
+  }
+
+  /* ============ VIEW 3: 考試總表 ============ */
+  .exam-section{margin-bottom:24px;}
+  .exam-section h2{
+    font-size:clamp(18px,1.8vw,28px);
+    font-weight:900;
+    margin:0 0 12px 0;
+    color:var(--text-0);
+    display:flex;align-items:center;gap:8px;
+  }
+  .exam-section h2 .badge-dot{
+    width:10px;height:10px;border-radius:50%;
+  }
+  .exam-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));
+    gap:12px;
+  }
+  .exam-card{
+    background:var(--bg-2);
+    border:1px solid var(--line);
+    border-top:5px solid var(--text-dim);
+    border-radius:12px;
+    padding:14px 16px;
+    display:flex;flex-direction:column;gap:8px;
+  }
+  .exam-card.cat-mock{border-top-color:var(--c-mock);}
+  .exam-card.cat-examMid{border-top-color:var(--c-exam);}
+  .exam-card.status-done{opacity:0.5;}
+  .exam-card .exam-name{
+    font-size:clamp(14px,1.3vw,21px);
+    font-weight:900;
+    color:var(--text-0);
+  }
+  .exam-card .exam-date{
+    font-size:clamp(12px,1.1vw,18px);
+    font-weight:700;
+    color:var(--text-1);
+  }
+  .exam-card .exam-status{
+    font-size:clamp(10px,0.85vw,13px);
+    font-weight:800;
+    padding:3px 10px;
+    border-radius:999px;
+    width:fit-content;
+  }
+
+  .final-card{
+    background:radial-gradient(circle at 30% 10%, rgba(255,93,108,0.28), transparent 60%), var(--bg-2);
+    border:2px solid var(--c-final);
+    border-radius:16px;
+    padding:clamp(20px, 3vw, 32px) clamp(24px, 4vw, 40px);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    gap:8px;
+    box-shadow:0 0 30px rgba(255,93,108,0.15);
+  }
+  .final-card .final-tag{
+    font-size:clamp(12px,1vw,16px);
+    font-weight:900;
+    letter-spacing:4px;
+    color:var(--c-final);
+  }
+  .final-card .final-title{
+    font-size:clamp(24px,3vw,46px);
+    font-weight:900;
+    color:#fff;
+  }
+  .final-card .final-date{
+    font-size:clamp(14px,1.4vw,22px);
+    font-weight:700;
+    color:var(--text-1);
+  }
+  .final-card .final-slogan{
+    margin-top:4px;
+    font-size:clamp(13px,1.2vw,19px);
+    font-weight:700;
+    color:var(--c-final);
+    letter-spacing:1px;
+  }
+
+  /* ============ FOOTER ============ */
+  footer{
+    flex:0 0 auto;
+    text-align:center;
+    padding:6px 10px;
+    font-size:clamp(10px,0.8vw,12px);
+    color:var(--text-dim);
+    background:var(--bg-1);
+    border-top:1px solid var(--line);
+  }
+
+  /* scrollbar */
+  #view-timeline::-webkit-scrollbar,#view-exams::-webkit-scrollbar{width:8px;}
+  #view-timeline::-webkit-scrollbar-thumb,#view-exams::-webkit-scrollbar-thumb{background:var(--bg-3);border-radius:8px;}
+
+  /* ============ RWD ============ */
+  @media (max-width:1024px){
+    body{overflow:auto;}
+    .view{position:relative;display:none;padding:14px 16px;overflow:visible;}
+    .view.active{display:flex;}
+    main{overflow:visible;}
+    .hero-row{flex-direction:column;}
+    .countdown-card{flex:none;}
+    .top-bar{flex-direction:column;align-items:flex-start;gap:6px;}
+    .top-bar .date-block{text-align:left;}
+    .timeline-toolbar{flex-direction:column;align-items:stretch;gap:8px;}
+    .month-nav{width:100%;}
+    .filter-nav{width:100%;margin-left:0;}
+  }
+</style>
+</head>
+<body>
+<nav class="platform-topbar">
+  <div class="ptb-brand"><span class="ptb-logo">🎓</span><span>115學年度 三年23班｜國三班親會資訊平台</span></div>
+  <div class="ptb-links">
+    <a href="index.html" class="ptb-link">🏠 平台首頁</a>
+    <a href="calendar.html" class="ptb-link active">📅 升學行事曆</a>
+    <a href="daily-safety.html" class="ptb-link">🛡️ 生活與安全</a>
+    <a href="conduct-dress-code.html" class="ptb-link">👔 守時與服儀</a>
+    <a href="class-fund-snack.html" class="ptb-link">💰 班費與點心</a>
+    <a href="exam-change.html" class="ptb-link">📚 段考變革</a>
+  </div>
+</nav>
+<div class="app">
+
+  <!-- ============ 固定頂部資訊列 ============ -->
+  <header class="top-bar">
+    <div class="title-block">
+      <div class="main-title">115學年度 國三升學重大行事曆</div>
+      <div class="sub-title">掌握考試節奏 ‧ 抓住每個關鍵階段</div>
+      <div class="class-tag">陽明國中 ‧ 323班</div>
+    </div>
+    <div class="date-block">
+      <div class="date-main" id="current-date">--</div>
+      <div class="date-week" id="current-weekday">--</div>
+    </div>
+  </header>
+
+  <!-- ============ NAV ============ -->
+  <nav class="view-tabs">
+    <button class="tab-btn active" data-view="view-today">今日焦點</button>
+    <button class="tab-btn" data-view="view-timeline">國三時間軸</button>
+    <button class="tab-btn" data-view="view-exams">考試總表</button>
+    <div class="tab-spacer"></div>
+    <button class="ctrl-btn on" id="autoplay-btn"><span class="dot"></span><span id="autoplay-text">自動播放：ON</span></button>
+    <button class="ctrl-btn" id="fullscreen-btn">⛶ 全螢幕</button>
+  </nav>
+
+  <main>
+    <!-- ============ VIEW 1：今日焦點 ============ -->
+    <section class="view active" id="view-today">
+      <div class="today-grid">
+
+        <div class="hero-row">
+          <div class="countdown-card">
+            <div class="exam-name">國中教育會考</div>
+            <div class="exam-date">116年5月15日（六）～5月16日（日）</div>
+            <div class="cd-label">距離會考</div>
+            <div class="cd-number" id="exam-countdown">--<span>天</span></div>
+          </div>
+
+          <div class="nextup-card">
+            <div class="eyebrow">NEXT UP</div>
+            <div class="eyebrow-sub">下一個重要行程</div>
+            <div class="nu-title" id="nextup-title">--</div>
+            <div class="nu-meta">
+              <div class="nu-date" id="nextup-date">--</div>
+              <div class="nu-week" id="nextup-week"></div>
+              <div class="nu-time" id="nextup-time"></div>
+            </div>
+            <div class="nu-badge" id="nextup-badge"></div>
+            <div class="nu-countdown" id="nextup-countdown">--</div>
+          </div>
+        </div>
+
+        <div class="next-exam-bar" id="next-exam-bar">
+          <div class="label-tag">下一個考試</div>
+          <div class="ne-title" id="nextexam-title">--</div>
+          <div class="ne-date" id="nextexam-date">--</div>
+          <div class="ne-days" id="nextexam-days">--</div>
+        </div>
+
+        <div class="upcoming-section">
+          <div class="sec-title">接下來</div>
+          <div class="upcoming-list" id="upcoming-list"></div>
+        </div>
+
+        <div class="progress-section">
+          <div class="pg-label">國三備戰時間進度</div>
+          <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+          <div class="pg-pct" id="progress-pct">0%</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ VIEW 2：國三時間軸 ============ -->
+    <section class="view" id="view-timeline">
+      <div class="timeline-toolbar">
+        <div class="month-nav" id="month-nav"></div>
+        <div class="filter-nav" id="filter-nav"></div>
+      </div>
+      <div class="timeline-body" id="timeline-body"></div>
+    </section>
+
+    <!-- ============ VIEW 3：考試總表 ============ -->
+    <section class="view" id="view-exams">
+      <div class="exam-section">
+        <h2><span class="badge-dot" style="background:var(--c-mock)"></span>五次模擬考</h2>
+        <div class="exam-grid" id="exam-mock-grid"></div>
+      </div>
+      <div class="exam-section">
+        <h2><span class="badge-dot" style="background:var(--c-exam)"></span>第一學期段考</h2>
+        <div class="exam-grid" id="exam-mid1-grid"></div>
+      </div>
+      <div class="exam-section">
+        <h2><span class="badge-dot" style="background:var(--c-exam)"></span>第二學期段考</h2>
+        <div class="exam-grid" id="exam-mid2-grid"></div>
+      </div>
+      <div class="exam-section">
+        <h2><span class="badge-dot" style="background:var(--c-final)"></span>國中教育會考</h2>
+        <div class="final-card" id="final-card"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    115學年度 國三升學重大行事曆 ‧ 實際行程如有異動，以學校最新公告為準
+  </footer>
+</div>
+
+<script>
+/* ======================================================================
+   1. EVENT DATA
+   所有行程資料唯一來源，完全依照使用者提供之正式資料建立。
+   ====================================================================== */
+const events = [
+  // ---- 模擬考 ----
+  { id:"mock-01", title:"第一次模擬考", start:"2026-09-08", end:"2026-09-09", category:"mock", categoryLabel:"模擬考", importance:4 },
+  { id:"mock-02", title:"第二次模擬考", start:"2026-10-28", end:"2026-10-29", category:"mock", categoryLabel:"模擬考", importance:4 },
+  { id:"mock-03", title:"第三次模擬考", start:"2026-12-23", end:"2026-12-24", category:"mock", categoryLabel:"模擬考", importance:4 },
+  { id:"mock-04", title:"第四次模擬考", start:"2027-02-18", end:"2027-02-19", category:"mock", categoryLabel:"模擬考", importance:4 },
+  { id:"mock-05", title:"第五次模擬考", start:"2027-04-15", end:"2027-04-16", category:"mock", categoryLabel:"模擬考", importance:4 },
+
+  // ---- 第一學期段考 ----
+  { id:"exam-s1-01", title:"第一次段考", start:"2026-10-12", end:"2026-10-13", category:"examMid", categoryLabel:"段考", importance:4 },
+  { id:"exam-s1-02", title:"第二次段考", start:"2026-11-23", end:"2026-11-24", category:"examMid", categoryLabel:"段考", importance:4 },
+  { id:"exam-s1-03", title:"第三次段考週", start:"2027-01-18", end:"2027-01-19", category:"examMid", categoryLabel:"段考", importance:4 },
+
+  // ---- 第二學期段考（使用者未提供星期，不得自行補星期） ----
+  { id:"exam-s2-01", title:"第一次段考週", start:"2027-03-22", end:"2027-03-26", category:"examMid", categoryLabel:"段考", importance:4, noWeekday:true },
+  { id:"exam-s2-02", title:"第二次段考週", start:"2027-05-03", end:"2027-05-07", category:"examMid", categoryLabel:"段考", importance:4, noWeekday:true },
+
+  // ---- 國中教育會考 ----
+  { id:"final-exam", title:"國中教育會考", start:"2027-05-15", end:"2027-05-16", category:"final", categoryLabel:"會考", importance:5 },
+
+  // ---- 其他重大行程 ----
+  { id:"night-study-start", title:"國三晚自習開始", start:"2026-09-21", end:"2026-09-21", category:"school", categoryLabel:"校務／生活", importance:2 },
+  { id:"id-photo", title:"拍攝證件照", start:"2026-09-21", end:"2026-09-24", category:"admin", categoryLabel:"升學／行政", importance:2 },
+  { id:"trip-meeting", title:"國三畢旅行前會", start:"2026-10-13", end:"2026-10-13", category:"school", categoryLabel:"活動", importance:3, time:"15:40～16:30" },
+  { id:"grad-trip", title:"畢業旅行", start:"2026-10-14", end:"2026-10-16", category:"school", categoryLabel:"活動", importance:3 },
+  { id:"anniversary", title:"39週年校慶", start:"2026-11-06", end:"2026-11-06", category:"school", categoryLabel:"校務／活動", importance:2 },
+  { id:"group-photo", title:"全校大團拍及各班拍攝團體照", start:"2026-11-30", end:"2026-12-04", category:"school", categoryLabel:"活動", importance:2, noWeekday:true },
+  { id:"night-study-end", title:"第八節輔導課結束、國三晚自習結束", start:"2027-01-15", end:"2027-01-15", category:"school", categoryLabel:"校務／生活", importance:2 },
+  { id:"winter-tutoring", title:"寒假輔導", start:"2027-01-21", end:"2027-01-29", category:"school", categoryLabel:"校務／生活", importance:3,
+    datesList:["2027-01-21","2027-01-22","2027-01-25","2027-01-26","2027-01-27","2027-01-28","2027-01-29"] }
+];
+
+const EXAM_TARGET = "2027-05-15";          // 國中教育會考第一天
+const PREP_START  = "2026-09-01";          // 國三備戰起點
+const PREP_END    = "2027-05-15";          // 國三備戰終點（會考第一天）
+const EXAM_CATEGORIES = ["mock","examMid","final"];
+
+/* ======================================================================
+   2. DATE UTILITIES
+   ====================================================================== */
+function pad2(n){ return n < 10 ? "0" + n : "" + n; }
+
+function toDate(str){
+  const [y, m, d] = str.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+
+function todayDate(){
+  const t = new Date();
+  return new Date(t.getFullYear(), t.getMonth(), t.getDate());
+}
+
+function toROCYear(y){ return y - 1911; }
+
+function formatROCDate(dateStr){
+  const d = toDate(dateStr);
+  return toROCYear(d.getFullYear()) + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日";
+}
+
+function formatROCShort(dateStr){
+  const d = toDate(dateStr);
+  return pad2(d.getMonth() + 1) + "/" + pad2(d.getDate());
+}
+
+function formatROCDateRange(startStr, endStr){
+  if(!endStr || endStr === startStr) return formatROCDate(startStr);
+  const s = toDate(startStr), e = toDate(endStr);
+  if(s.getFullYear() === e.getFullYear() && s.getMonth() === e.getMonth()){
+    return toROCYear(s.getFullYear()) + "年" + (s.getMonth() + 1) + "月" + s.getDate() + "日～" + e.getDate() + "日";
+  } else if(s.getFullYear() === e.getFullYear()){
+    return toROCYear(s.getFullYear()) + "年" + (s.getMonth() + 1) + "月" + s.getDate() + "日～" + (e.getMonth() + 1) + "月" + e.getDate() + "日";
+  } else {
+    return formatROCDate(startStr) + "～" + formatROCDate(endStr);
+  }
+}
+
+const WEEKDAY_NAMES = ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
+function formatWeekday(dateStr){
+  const d = toDate(dateStr);
+  return WEEKDAY_NAMES[d.getDay()];
+}
+
+function calculateDaysRemaining(dateStr){
+  const target = toDate(dateStr);
+  const today = todayDate();
+  return Math.round((target - today) / 86400000);
+}
+
+function isSameDay(a, b){ return a.getTime() === b.getTime(); }
+
+/* ======================================================================
+   3. STATUS CALCULATION
+   done / today / tomorrow / ongoing / upcoming
+   ====================================================================== */
+function getEventStatus(ev){
+  const today = todayDate();
+  const start = toDate(ev.start);
+  const end = ev.end ? toDate(ev.end) : start;
+
+  if(today.getTime() > end.getTime()) return "done";
+
+  if(today.getTime() >= start.getTime() && today.getTime() <= end.getTime()){
+    if(start.getTime() === end.getTime()) return "today";
+    return "ongoing";
+  }
+
+  const diffDays = Math.round((start - today) / 86400000);
+  if(diffDays === 1) return "tomorrow";
+  return "upcoming";
+}
+
+function statusLabel(status){
+  switch(status){
+    case "done": return "✓ 已完成";
+    case "today": return "TODAY ‧ 今天";
+    case "tomorrow": return "TOMORROW ‧ 明天";
+    case "ongoing": return "進行中";
+    case "upcoming": return "即將到來";
+    default: return "";
+  }
+}
+
+/* ======================================================================
+   4. EVENT SORTING
+   以日期為主要依據，重要程度僅影響視覺不影響排序。
+   ====================================================================== */
+function sortByStart(list){
+  return [...list].sort((a, b) => toDate(a.start) - toDate(b.start));
+}
+
+/* ======================================================================
+   5. COUNTDOWN
+   ====================================================================== */
+function renderCountdown(){
+  const days = calculateDaysRemaining(EXAM_TARGET);
+  const el = document.getElementById("exam-countdown");
+  if(days > 0){
+    el.innerHTML = days + "<span>天</span>";
+  } else if(days === 0){
+    el.innerHTML = "就是今天<span></span>";
+  } else {
+    el.innerHTML = "已結束<span></span>";
+  }
+}
+
+function renderProgress(){
+  const start = toDate(PREP_START).getTime();
+  const end = toDate(PREP_END).getTime();
+  const now = todayDate().getTime();
+  let pct = ((now - start) / (end - start)) * 100;
+  pct = Math.max(0, Math.min(100, pct));
+  const pctRounded = Math.round(pct);
+  document.getElementById("progress-fill").style.width = pctRounded + "%";
+  document.getElementById("progress-pct").textContent = pctRounded + "%";
+}
+
+/* ======================================================================
+   6. TODAY VIEW
+   ====================================================================== */
+function renderHeaderDate(){
+  const today = todayDate();
+  const iso = today.getFullYear() + "-" + pad2(today.getMonth()+1) + "-" + pad2(today.getDate());
+  document.getElementById("current-date").textContent = formatROCDate(iso);
+  document.getElementById("current-weekday").textContent = formatWeekday(iso);
+}
+
+function getNotDoneSorted(){
+  return sortByStart(events.filter(ev => getEventStatus(ev) !== "done"));
+}
+
+function renderNextUp(){
+  const list = getNotDoneSorted();
+  const nu = list[0];
+  if(!nu){
+    document.getElementById("nextup-title").textContent = "本學年重要行程已全部完成";
+    document.getElementById("nextup-date").textContent = "";
+    document.getElementById("nextup-week").textContent = "";
+    document.getElementById("nextup-time").textContent = "";
+    document.getElementById("nextup-badge").textContent = "";
+    document.getElementById("nextup-countdown").textContent = "";
+    return;
+  }
+  const status = getEventStatus(nu);
+  document.getElementById("nextup-title").textContent = nu.title;
+  document.getElementById("nextup-date").textContent = formatROCDateRange(nu.start, nu.end);
+  document.getElementById("nextup-week").textContent = nu.noWeekday ? "" : formatWeekday(nu.start);
+  document.getElementById("nextup-time").textContent = nu.time ? nu.time : "";
+
+  const badgeEl = document.getElementById("nextup-badge");
+  badgeEl.textContent = statusLabel(status);
+  badgeEl.style.background = status === "today" ? "#ffffff" : (status === "tomorrow" ? "var(--c-admin-bg)" : "var(--c-mock-bg)");
+  badgeEl.style.color = status === "today" ? "#04101f" : (status === "tomorrow" ? "var(--c-admin)" : "var(--c-mock)");
+
+  const cdEl = document.getElementById("nextup-countdown");
+  if(status === "today"){
+    cdEl.textContent = "就在今天";
+  } else if(status === "ongoing"){
+    cdEl.textContent = "進行中";
+  } else {
+    const d = calculateDaysRemaining(nu.start);
+    cdEl.textContent = "還有 " + d + " 天";
+  }
+}
+
+function renderUpcomingList(){
+  const list = getNotDoneSorted().slice(0, 5);
+  const wrap = document.getElementById("upcoming-list");
+  wrap.innerHTML = "";
+  if(list.length === 0){
+    wrap.innerHTML = '<div class="up-card">目前沒有更多行程</div>';
+    return;
+  }
+  list.forEach(ev => {
+    const status = getEventStatus(ev);
+    const card = document.createElement("div");
+    card.className = "up-card cat-" + ev.category + (status === "today" ? " is-today" : "");
+    const week = ev.noWeekday ? "" : formatWeekday(ev.start);
+    let dday = "";
+    if(status === "today") dday = "TODAY";
+    else if(status === "tomorrow") dday = "TOMORROW";
+    else if(status === "ongoing") dday = "進行中";
+    else dday = "還有 " + calculateDaysRemaining(ev.start) + " 天";
+
+    card.innerHTML =
+      '<div>' +
+        '<div class="up-date">' + formatROCShort(ev.start) + (ev.end && ev.end !== ev.start ? "～" + formatROCShort(ev.end) : "") + '</div>' +
+        '<div class="up-week">' + week + '</div>' +
+        '<div class="up-title">' + ev.title + '</div>' +
+      '</div>' +
+      '<div class="up-foot">' +
+        '<span class="up-cat">' + ev.categoryLabel + '</span>' +
+        '<span class="up-dday">' + dday + '</span>' +
+      '</div>';
+    wrap.appendChild(card);
+  });
+}
+
+function renderNextExam(){
+  const list = sortByStart(events.filter(ev => EXAM_CATEGORIES.includes(ev.category) && getEventStatus(ev) !== "done"));
+  const bar = document.getElementById("next-exam-bar");
+  const ne = list[0];
+  if(!ne){
+    bar.style.display = "none";
+    return;
+  }
+  bar.style.display = "flex";
+  document.getElementById("nextexam-title").textContent = ne.title;
+  document.getElementById("nextexam-date").textContent = formatROCDateRange(ne.start, ne.end);
+  const status = getEventStatus(ne);
+  const daysEl = document.getElementById("nextexam-days");
+  if(status === "today") daysEl.textContent = "TODAY ‧ 今天";
+  else if(status === "ongoing") daysEl.textContent = "進行中";
+  else daysEl.textContent = "還有 " + calculateDaysRemaining(ne.start) + " 天";
+}
+
+function renderTodayView(){
+  renderHeaderDate();
+  renderCountdown();
+  renderProgress();
+  renderNextUp();
+  renderUpcomingList();
+  renderNextExam();
+}
+
+/* ======================================================================
+   7. TIMELINE VIEW
+   依月份分段：9→10→11→12→1→2→3→4→5
+   ====================================================================== */
+const TIMELINE_MONTHS = [
+  { key:"2026-09", label:"9月",  year:2026, month:9 },
+  { key:"2026-10", label:"10月", year:2026, month:10 },
+  { key:"2026-11", label:"11月", year:2026, month:11 },
+  { key:"2026-12", label:"12月", year:2026, month:12 },
+  { key:"2027-01", label:"1月",  year:2027, month:1 },
+  { key:"2027-02", label:"2月",  year:2027, month:2 },
+  { key:"2027-03", label:"3月",  year:2027, month:3 },
+  { key:"2027-04", label:"4月",  year:2027, month:4 },
+  { key:"2027-05", label:"5月",  year:2027, month:5 }
+];
+
+let currentFilter = "all";
+
+function eventMonthKey(ev){
+  const d = toDate(ev.start);
+  return d.getFullYear() + "-" + pad2(d.getMonth() + 1);
+}
+
+function buildMonthNav(){
+  const nav = document.getElementById("month-nav");
+  nav.innerHTML = "";
+  const today = todayDate();
+  const curKey = today.getFullYear() + "-" + pad2(today.getMonth() + 1);
+  TIMELINE_MONTHS.forEach(m => {
+    const btn = document.createElement("button");
+    btn.className = "month-btn" + (m.key === curKey ? " current" : "");
+    btn.textContent = m.label;
+    btn.addEventListener("click", () => {
+      const target = document.getElementById("month-" + m.key);
+      if(target) target.scrollIntoView({ behavior:"smooth", block:"start" });
+    });
+    nav.appendChild(btn);
+  });
+}
+
+const FILTERS = [
+  { key:"all", label:"全部" },
+  { key:"mock", label:"模擬考" },
+  { key:"examMid", label:"段考" },
+  { key:"final", label:"會考" },
+  { key:"school", label:"校務／活動" },
+  { key:"admin", label:"升學／行政" }
+];
+
+function buildFilterNav(){
+  const nav = document.getElementById("filter-nav");
+  nav.innerHTML = "";
+  FILTERS.forEach(f => {
+    const btn = document.createElement("button");
+    btn.className = "filter-btn" + (f.key === currentFilter ? " active" : "");
+    btn.textContent = f.label;
+    btn.addEventListener("click", () => {
+      currentFilter = f.key;
+      renderTimelineView();
+    });
+    nav.appendChild(btn);
+  });
+}
+
+function buildEventCard(ev){
+  const status = getEventStatus(ev);
+  const card = document.createElement("div");
+  card.className = "ev-card cat-" + ev.category + (status === "done" ? " status-done" : "");
+
+  let dateHtml = formatROCShort(ev.start) + (ev.end && ev.end !== ev.start ? "～" + formatROCShort(ev.end) : "");
+  let weekHtml = ev.noWeekday ? "" : formatWeekday(ev.start);
+
+  let extra = "";
+  if(ev.time){
+    extra += '<div class="ev-time">' + ev.time + '</div>';
+  }
+  if(ev.datesList){
+    extra += '<div class="ev-mini-dates">共' + ev.datesList.length + '日<br>' +
+      ev.datesList.map(d => formatROCShort(d)).join(" ‧ ") + '</div>';
+  }
+
+  card.innerHTML =
+    '<div class="ev-date">' + dateHtml + '</div>' +
+    '<div class="ev-week">' + weekHtml + '</div>' +
+    extra +
+    '<div class="ev-title">' + ev.title + '</div>' +
+    '<div class="ev-cat">' + ev.categoryLabel + '</div>' +
+    '<div class="ev-status st-' + status + '">' + statusLabel(status) + '</div>';
+  return card;
+}
+
+function renderTimelineView(){
+  buildMonthNav();
+  buildFilterNav();
+
+  const body = document.getElementById("timeline-body");
+  body.innerHTML = "";
+
+  const filtered = currentFilter === "all" ? events : events.filter(ev => ev.category === currentFilter);
+  const sorted = sortByStart(filtered);
+
+  // 找出第一個「尚未完成」事件的 id，用來插入 NOW 標記
+  const firstNotDoneId = (() => {
+    const nd = sortByStart(events.filter(ev => getEventStatus(ev) !== "done"))[0];
+    return nd ? nd.id : null;
+  })();
+  let nowInserted = false;
+
+  TIMELINE_MONTHS.forEach(m => {
+    const monthEvents = sorted.filter(ev => eventMonthKey(ev) === m.key);
+    const section = document.createElement("div");
+    section.className = "month-section";
+    section.id = "month-" + m.key;
+
+    const h2 = document.createElement("h2");
+    h2.innerHTML = m.label + '<span class="yr">' + toROCYear(m.year) + '年</span>';
+    section.appendChild(h2);
+
+    if(!nowInserted && firstNotDoneId && monthEvents.some(ev => ev.id === firstNotDoneId)){
+      const marker = document.createElement("div");
+      marker.className = "now-marker";
+      marker.innerHTML = '<div class="now-tag">◆ 目前位置 NOW</div>';
+      section.appendChild(marker);
+      nowInserted = true;
+    }
+
+    const row = document.createElement("div");
+    row.className = "card-row";
+    if(monthEvents.length === 0){
+      row.innerHTML = '<div style="color:var(--text-dim);font-size:14px;">本月無列入之重大行程</div>';
+    } else {
+      monthEvents.forEach(ev => row.appendChild(buildEventCard(ev)));
+    }
+    section.appendChild(row);
+    body.appendChild(section);
+  });
+
+  // 若目前日期已超過所有事件，於最下方補上 NOW 標記
+  if(!nowInserted){
+    const marker = document.createElement("div");
+    marker.className = "now-marker";
+    marker.innerHTML = '<div class="now-tag">◆ 目前位置 NOW</div>';
+    body.appendChild(marker);
+  }
+}
+
+/* ======================================================================
+   8. EXAM VIEW
+   ====================================================================== */
+function buildExamCard(ev){
+  const status = getEventStatus(ev);
+  const card = document.createElement("div");
+  card.className = "exam-card cat-" + ev.category + (status === "done" ? " status-done" : "");
+  const week = ev.noWeekday ? "" : (" (" + formatWeekday(ev.start).replace("星期","") + ")");
+  card.innerHTML =
+    '<div class="exam-name">' + ev.title + '</div>' +
+    '<div class="exam-date">' + formatROCDateRange(ev.start, ev.end) + (ev.noWeekday ? "" : "") + '</div>' +
+    '<div class="exam-status st-' + status + '" style="background:' + (status==='done' ? 'var(--bg-3)' : 'var(--c-mock-bg)') + ';color:' + (status==='done' ? 'var(--text-dim)' : 'var(--c-mock)') + '">' + statusLabel(status) + '</div>';
+  return card;
+}
+
+function renderExamView(){
+  const mockGrid = document.getElementById("exam-mock-grid");
+  const mid1Grid = document.getElementById("exam-mid1-grid");
+  const mid2Grid = document.getElementById("exam-mid2-grid");
+  mockGrid.innerHTML = ""; mid1Grid.innerHTML = ""; mid2Grid.innerHTML = "";
+
+  sortByStart(events.filter(ev => ev.category === "mock")).forEach(ev => mockGrid.appendChild(buildExamCard(ev)));
+
+  const mid = sortByStart(events.filter(ev => ev.category === "examMid"));
+  mid.filter(ev => toDate(ev.start).getFullYear() === 2026 || (toDate(ev.start).getFullYear()===2027 && toDate(ev.start).getMonth()+1===1))
+     .forEach(ev => mid1Grid.appendChild(buildExamCard(ev)));
+  mid.filter(ev => toDate(ev.start).getFullYear() === 2027 && toDate(ev.start).getMonth()+1 >= 3)
+     .forEach(ev => mid2Grid.appendChild(buildExamCard(ev)));
+
+  const finalEv = events.find(ev => ev.category === "final");
+  const finalCard = document.getElementById("final-card");
+  finalCard.innerHTML =
+    '<div class="final-tag">FINAL</div>' +
+    '<div class="final-title">' + finalEv.title + '</div>' +
+    '<div class="final-date">' + formatROCDateRange(finalEv.start, finalEv.end) + '</div>' +
+    '<div class="final-slogan">國三最後關鍵戰役</div>';
+}
+
+/* ======================================================================
+   9. FILTER — 見 TIMELINE VIEW 區塊之 buildFilterNav()
+   ====================================================================== */
+
+/* ======================================================================
+   10. NAVIGATION
+   ====================================================================== */
+const VIEW_IDS = ["view-today", "view-timeline", "view-exams"];
+let currentViewIndex = 0;
+
+function showView(viewId){
+  const idx = VIEW_IDS.indexOf(viewId);
+  if(idx === -1) return;
+  currentViewIndex = idx;
+
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  document.getElementById(viewId).classList.add("active");
+
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.view === viewId);
+  });
+
+  if(viewId === "view-today") renderTodayView();
+  if(viewId === "view-timeline") renderTimelineView();
+  if(viewId === "view-exams") renderExamView();
+}
+
+function showViewByIndex(idx){
+  const wrapped = (idx + VIEW_IDS.length) % VIEW_IDS.length;
+  showView(VIEW_IDS[wrapped]);
+}
+
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    stopAutoplayVisual();
+    showView(btn.dataset.view);
+  });
+});
+
+/* ======================================================================
+   11. AUTO PLAY — 每視圖停留 15 秒，淡入淡出
+   ====================================================================== */
+let autoplayOn = true;
+let autoplayTimer = null;
+
+function startAutoplay(){
+  stopAutoplayVisual(false);
+  autoplayTimer = setInterval(() => {
+    showViewByIndex(currentViewIndex + 1);
+  }, 15000);
+}
+
+function stopAutoplay(){
+  if(autoplayTimer){ clearInterval(autoplayTimer); autoplayTimer = null; }
+}
+
+function stopAutoplayVisual(userTriggered){
+  // 使用者手動切換視圖時，不強制關閉自動播放開關，只是重新計時
+  if(autoplayOn){
+    stopAutoplay();
+    startAutoplay();
+  }
+}
+
+function setAutoplay(on){
+  autoplayOn = on;
+  const btn = document.getElementById("autoplay-btn");
+  const text = document.getElementById("autoplay-text");
+  btn.classList.toggle("on", on);
+  text.textContent = "自動播放：" + (on ? "ON" : "OFF");
+  if(on){ startAutoplay(); } else { stopAutoplay(); }
+}
+
+document.getElementById("autoplay-btn").addEventListener("click", () => setAutoplay(!autoplayOn));
+
+/* ======================================================================
+   12. FULLSCREEN
+   ====================================================================== */
+function toggleFullscreen(){
+  if(!document.fullscreenElement){
+    document.documentElement.requestFullscreen().catch(() => {
+      alert("此瀏覽器不支援或不允許全螢幕模式，請手動按 F11 進入全螢幕。");
+    });
+  } else {
+    document.exitFullscreen();
+  }
+}
+document.getElementById("fullscreen-btn").addEventListener("click", toggleFullscreen);
+
+/* ======================================================================
+   13. KEYBOARD CONTROL
+   ← 上一頁 / → 下一頁 / Home 回今日焦點 / Space 暫停繼續 / F 全螢幕 / Esc 退出
+   ====================================================================== */
+document.addEventListener("keydown", (e) => {
+  switch(e.key){
+    case "ArrowLeft":
+      stopAutoplayVisual();
+      showViewByIndex(currentViewIndex - 1);
+      break;
+    case "ArrowRight":
+      stopAutoplayVisual();
+      showViewByIndex(currentViewIndex + 1);
+      break;
+    case "Home":
+      stopAutoplayVisual();
+      showView("view-today");
+      break;
+    case " ":
+      e.preventDefault();
+      setAutoplay(!autoplayOn);
+      break;
+    case "f":
+    case "F":
+      toggleFullscreen();
+      break;
+    case "Escape":
+      if(document.fullscreenElement) document.exitFullscreen();
+      break;
+  }
+});
+
+/* ======================================================================
+   INIT — 初始狀態預設顯示「今日焦點」
+   ====================================================================== */
+(function init(){
+  showView("view-today");
+  startAutoplay();
+  // 每分鐘刷新一次日期／倒數，避免長時間開啟後資料過舊
+  setInterval(() => {
+    if(document.getElementById("view-today").classList.contains("active")) renderTodayView();
+  }, 60000);
+})();
+</script>
+</body>
+</html>

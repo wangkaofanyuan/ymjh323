@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>115學年度 三年23班班親會｜班級公費與第八節點心</title>
+  <style>
+    :root {
+      --navy-950: #0A1830;
+      --navy-900: #0E2141;
+      --navy-800: #163457;
+      --navy-700: #1E4570;
+      --navy-600: #2C5A8C;
+      --blue-gray: #7C93B3;
+      --ink: #0F2038;
+      --ink-light: #EAF1FB;
+      --ink-soft: #9FB4D1;
+      --muted: #5A6E8C;
+      --paper: #0A1830;
+      --panel: #EAF1FB;
+      --line: #DCE3EC;
+      --green: #2C5A8C;
+      --amber: #F2A93B;
+      --amber-deep: #D98A1E;
+      --amber-soft: rgba(242, 169, 59, 0.16);
+      --amber-soft-border: rgba(242, 169, 59, 0.5);
+      --white: #FFFFFF;
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: clamp(14px, 1.15vw, 19px);
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Heiti TC", system-ui, -apple-system, "BlinkMacSystemFont", sans-serif;
+      background:
+        radial-gradient(circle at 88% -6%, rgba(60, 110, 170, 0.35), transparent 42%),
+        linear-gradient(160deg, var(--navy-900) 0%, var(--navy-950) 70%);
+      color: var(--ink-light);
+      line-height: 1.65;
+      letter-spacing: .02em;
+      overflow: hidden;
+    }
+
+    /* ============ PLATFORM TOPBAR (共用導覽列) ============ */
+    .platform-topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 44px;
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 20px;
+      background: linear-gradient(180deg, #0E2141, #0A1830);
+      border-bottom: 1px solid rgba(242, 169, 59, 0.35);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+    }
+
+    .platform-topbar .ptb-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #F2A93B;
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: .5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .platform-topbar .ptb-brand .ptb-logo {
+      font-size: 16px;
+    }
+
+    .platform-topbar .ptb-links {
+      display: flex;
+      gap: 6px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .platform-topbar .ptb-links::-webkit-scrollbar {
+      display: none;
+    }
+
+    .platform-topbar a.ptb-link {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: #C7D2E6;
+      text-decoration: none;
+      font-size: 12.5px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.04);
+      transition: all .2s ease;
+      white-space: nowrap;
+    }
+
+    .platform-topbar a.ptb-link:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .platform-topbar a.ptb-link.active {
+      background: #F2A93B;
+      border-color: #F2A93B;
+      color: #0A1830;
+    }
+
+    :fullscreen .platform-topbar,
+    :-webkit-full-screen .platform-topbar {
+      display: none !important;
+    }
+
+    :fullscreen .deck,
+    :-webkit-full-screen .deck {
+      margin-top: 0 !important;
+      height: 100dvh !important;
+    }
+
+    :fullscreen .rail,
+    :-webkit-full-screen .rail {
+      top: 0 !important;
+    }
+
+    /* ---------- 進度列 ---------- */
+    .rail {
+      position: fixed;
+      top: 44px;
+      left: 0;
+      right: 0;
+      display: flex;
+      gap: 3px;
+      padding: 0 1.6rem;
+      height: 5px;
+      z-index: 30;
+    }
+
+    .rail span {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 0 0 3px 3px;
+      transition: background 0.3s ease;
+    }
+
+    .rail span.done {
+      background: var(--amber);
+    }
+
+    /* ---------- 投影片 ---------- */
+    .deck {
+      position: relative;
+      margin-top: 44px;
+      height: calc(100dvh - 44px);
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2.2rem 4rem 4.8rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      display: flex;
+    }
+
+    .kicker {
+      color: var(--blue-gray);
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+
+    .kicker::before {
+      content: "";
+      width: 2.2rem;
+      height: 3px;
+      background: var(--amber);
+      border-radius: 2px;
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 2.6rem, 3.2rem);
+      font-weight: 800;
+      line-height: 1.28;
+      letter-spacing: .01em;
+      margin-bottom: 1.2rem;
+    }
+
+    p {
+      font-size: 1.2rem;
+      color: var(--ink-soft);
+      max-width: 38em;
+    }
+
+    p+p {
+      margin-top: .6rem;
+    }
+
+    .lead {
+      color: var(--ink-light);
+      font-size: 1.3rem;
+    }
+
+    .stress {
+      display: inline-block;
+      margin-top: 1.2rem;
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--amber);
+      background: linear-gradient(to top, var(--amber-soft) 45%, transparent 45%);
+      padding: 0 0.3rem;
+      line-height: 1.4;
+      max-width: 100%;
+    }
+
+    .note {
+      margin-top: 1.2rem;
+      font-size: 1rem;
+      color: var(--ink-soft);
+      border-left: 4px solid rgba(255, 255, 255, 0.25);
+      padding-left: 0.8rem;
+      max-width: 36em;
+    }
+
+    /* ---------- 卡片 ---------- */
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1.4rem;
+    }
+
+    .card {
+      flex: 1 1 11rem;
+      background: var(--white);
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.2rem 1.2rem;
+      box-shadow: 0 8px 20px rgba(6, 16, 34, 0.28);
+    }
+
+    .card .ico {
+      font-size: 2.2rem;
+      line-height: 1;
+      display: block;
+      margin-bottom: .5rem;
+    }
+
+    .card .t {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .card .s {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-top: .2rem;
+    }
+
+    .topic {
+      background: var(--panel);
+      border: none;
+      flex: 1 1 14rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.2rem 1.5rem;
+    }
+
+    .topic .num {
+      width: 2.6rem;
+      height: 2.6rem;
+      flex: none;
+      border-radius: 50%;
+      background: var(--navy-600);
+      color: var(--white);
+      font-size: 1.25rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ---------- 流程 ---------- */
+    .flow {
+      display: flex;
+      align-items: stretch;
+      flex-wrap: wrap;
+      gap: .6rem;
+      margin-top: 1.4rem;
+    }
+
+    .step {
+      background: var(--white);
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 0.9rem 1.2rem;
+      font-size: 1.15rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 4px 14px rgba(6, 16, 34, 0.22);
+    }
+
+    .step.last {
+      background: var(--navy-600);
+      color: var(--white);
+      border-color: var(--navy-600);
+    }
+
+    .arrow {
+      display: flex;
+      align-items: center;
+      color: var(--amber);
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .vflow {
+      margin-top: 1.2rem;
+    }
+
+    .vrow {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--white);
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 0.8rem 1.2rem;
+      font-size: 1.15rem;
+      max-width: 38em;
+      box-shadow: 0 4px 14px rgba(6, 16, 34, 0.22);
+    }
+
+    .vrow.key {
+      background: var(--amber-soft);
+      border-color: var(--amber-soft-border);
+      color: var(--ink-light);
+    }
+
+    .vrow .mark {
+      width: 2rem;
+      height: 2rem;
+      flex: none;
+      border-radius: 50%;
+      background: var(--panel);
+      color: var(--navy-600);
+      font-size: 1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .vrow.key .mark {
+      background: var(--amber);
+      color: var(--white);
+    }
+
+    .vdown {
+      color: var(--amber);
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin: .2rem 0 .2rem 1.8rem;
+      line-height: 1;
+    }
+
+    .vrow b {
+      color: var(--amber);
+      font-weight: 800;
+    }
+
+    /* ---------- 名單／條列 ---------- */
+    .badge {
+      display: inline-block;
+      background: var(--amber-soft);
+      border: 1.5px solid var(--amber-soft-border);
+      color: var(--amber);
+      font-size: 1.05rem;
+      font-weight: 700;
+      padding: .35rem 1.1rem;
+      border-radius: 999px;
+      margin-bottom: 1.2rem;
+    }
+
+    ul.plain {
+      list-style: none;
+      margin-top: .3rem;
+    }
+
+    ul.plain li {
+      font-size: 1.2rem;
+      padding: .6rem 0 .6rem 1.8rem;
+      position: relative;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.18);
+      max-width: 38em;
+      color: var(--ink-light);
+    }
+
+    ul.plain li:last-child {
+      border-bottom: none;
+    }
+
+    ul.plain li::before {
+      content: "";
+      position: absolute;
+      left: .4rem;
+      top: 1.25rem;
+      width: .5rem;
+      height: .5rem;
+      border-radius: 50%;
+      background: var(--amber);
+    }
+
+    ul.plain b {
+      color: var(--amber);
+      font-weight: 800;
+    }
+
+    /* ---------- 首、末頁 ---------- */
+    .cover h1 {
+      font-size: clamp(2rem, 3rem, 3.5rem);
+      max-width: 16em;
+    }
+
+    .cover .meta {
+      font-size: 1.05rem;
+      color: var(--ink-soft);
+      margin-bottom: 1rem;
+      letter-spacing: .06em;
+    }
+
+    .sign {
+      margin-top: 2.2rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--amber);
+      border-top: 1px solid rgba(255, 255, 255, 0.18);
+      padding-top: 1rem;
+      display: inline-block;
+    }
+
+    /* ---------- 控制列 ---------- */
+    .bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: .7rem 1.8rem .9rem;
+      background: linear-gradient(to top, var(--navy-950) 70%, transparent);
+      z-index: 20;
+    }
+
+    .bar .who {
+      font-size: .95rem;
+      color: var(--ink-soft);
+    }
+
+    .ctrl {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+
+    button {
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--ink-light);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 999px;
+      padding: .45rem 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    button:hover {
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    button:disabled {
+      opacity: .35;
+      cursor: default;
+    }
+
+    button:focus-visible {
+      outline: 3px solid var(--amber);
+      outline-offset: 2px;
+    }
+
+    .count {
+      font-size: 1rem;
+      font-weight: 700;
+      min-width: 4rem;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    @media (max-width: 1024px) {
+      .platform-topbar {
+        height: auto;
+        flex-direction: column;
+        padding: 12px 16px;
+        gap: 12px;
+      }
+
+      .platform-topbar .ptb-brand {
+        width: 100%;
+        justify-content: center;
+        font-size: 13px;
+      }
+
+      .platform-topbar .ptb-links {
+        width: 100%;
+        justify-content: flex-start;
+        padding-bottom: 4px;
+      }
+
+      .platform-topbar a.ptb-link {
+        font-size: 11.5px;
+        padding: 6px 12px;
+      }
+
+      .rail {
+        top: 94px;
+      }
+
+      .deck {
+        margin-top: 94px;
+        height: calc(100dvh - 94px);
+        overflow-y: auto;
+        overflow-x: hidden;
+        scroll-snap-type: y proximity;
+      }
+
+      .slide {
+        position: relative;
+        display: flex !important;
+        min-height: calc(100dvh - 94px);
+        height: auto;
+        scroll-snap-align: start;
+        padding: 3rem 1.5rem 6.5rem;
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      h1 {
+        font-size: clamp(1.8rem, 6vw, 2.4rem);
+      }
+
+      p,
+      .lead {
+        font-size: 1.15rem;
+      }
+
+      .stress {
+        display: inline;
+        line-height: 1.55;
+        padding: 0.1rem 0;
+      }
+
+      .cards {
+        flex-direction: column;
+      }
+
+      .card,
+      .topic {
+        flex: 1 1 100%;
+        padding: 1.2rem 1.4rem;
+      }
+
+      .flow {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.8rem;
+      }
+
+      .arrow {
+        transform: rotate(90deg);
+        justify-content: center;
+        padding: 0;
+        margin: -0.2rem 0;
+      }
+
+      .vrow {
+        font-size: 1.1rem;
+        padding: 0.8rem 1rem;
+      }
+
+      .vdown {
+        margin-left: 1.4rem;
+      }
+
+      ul.plain li {
+        padding-left: 1.4rem;
+        font-size: 1.1rem;
+      }
+
+      ul.plain li::before {
+        left: 0;
+        top: 1.15rem;
+      }
+
+      .bar .who {
+        display: none;
+      }
+
+      .bar {
+        justify-content: center;
+      }
+    }
+
+    @media print {
+      .bar,
+      .rail,
+      .platform-topbar {
+        display: none;
+      }
+
+      .deck {
+        margin-top: 0;
+        overflow: visible;
+        height: auto;
+      }
+
+      .slide {
+        position: static;
+        display: block !important;
+        page-break-after: always;
+        padding: 2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 導覽列（高亮標示已修正為 class-fund-snack.html） -->
+  <nav class="platform-topbar">
+    <div class="ptb-brand"><span class="ptb-logo">🎓</span><span>115學年度 三年23班｜國三班親會資訊平台</span></div>
+    <div class="ptb-links">
+      <a href="index.html" class="ptb-link">🏠 平台首頁</a>
+      <a href="calendar.html" class="ptb-link">📅 升學行事曆</a>
+      <a href="daily-safety.html" class="ptb-link">🛡️ 生活與安全</a>
+      <a href="conduct-dress-code.html" class="ptb-link">👔 守時與服儀</a>
+      <a href="class-fund-snack.html" class="ptb-link active">💰 班費與點心</a>
+      <a href="exam-change.html" class="ptb-link">📚 段考變革</a>
+    </div>
+  </nav>
+
+  <div class="rail" id="rail"></div>
+
+  <div class="deck">
+
+    <!-- 1 -->
+    <section class="slide cover active">
+      <div class="meta">115學年度 三年23班班親會</div>
+      <h1>國三了，孩子的學習節奏也加快了</h1>
+      <p class="lead">各科複習、模擬考接踵而來，老師也持續陪著孩子調整生活步調，希望孩子能穩定下來，專心面對國三的課業挑戰。</p>
+      <div class="kicker" style="margin-top:1.8rem">今天向家長說明兩件事</div>
+      <div class="cards">
+        <div class="card topic"><span class="num">1</span><span class="t">班級公費</span></div>
+        <div class="card topic"><span class="num">2</span><span class="t">第八節點心</span></div>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section class="slide">
+      <div class="kicker">班級公費</div>
+      <h1>謝謝家長在校慶園遊會的支持！</h1>
+      <p class="lead">二年級校慶園遊會攤位扣除成本後的結餘，已全數納入三年23班班級公費。</p>
+      <div class="stress">這筆錢在國三這一年：專款專用、全部留在班上。</div>
+      <div class="cards">
+        <div class="card"><span class="ico">📚</span><span class="t">複習備品</span></div>
+        <div class="card"><span class="ico">✏️</span><span class="t">公共文具</span></div>
+        <div class="card"><span class="ico">🏆</span><span class="t">模擬考獎勵</span></div>
+        <div class="card"><span class="ico">🏫</span><span class="t">班級日常公務</span></div>
+      </div>
+      <p style="margin-top:1.4rem;font-size:1.3rem;font-weight:700;color:var(--ink)">落實專款專用，讓全班孩子一起共享。</p>
+      <div class="note">班級公費，與第八節的外訂點心費是分開的兩筆錢。</div>
+    </section>
+
+    <!-- 3 -->
+    <section class="slide">
+      <div class="kicker">第八節點心</div>
+      <h1>國三課業更重，孩子也更需要補充體力</h1>
+      <div class="flow">
+        <div class="step">第七節下課</div>
+        <div class="arrow">→</div>
+        <div class="step">適度吃點東西</div>
+        <div class="arrow">→</div>
+        <div class="step">補充電力</div>
+        <div class="arrow">→</div>
+        <div class="step last">維持第八節專注力</div>
+      </div>
+      <p style="margin-top:1.8rem">孩子從國二到國三都有留第八節，到了國三，課業與腦力消耗更大，課前適度補充能量，有助於孩子維持下半天的體力與精神。</p>
+    </section>
+
+    <!-- 4 -->
+    <section class="slide">
+      <div class="kicker">第八節點心</div>
+      <h1>謝謝曾經支持點心計畫的家長</h1>
+      <p class="lead">點心計畫推動之初，多虧多位熱心家長的慷慨解囊與贊助支持，才能順利起步。</p>
+      <div class="stress">這份照顧孩子的心意，老師和孩子們都非常感謝。</div>
+    </section>
+
+    <!-- 5 -->
+    <section class="slide">
+      <div class="kicker">目前的點心制度</div>
+      <h1>現在：使用者付費、自主訂購</h1>
+      <div class="badge">4/24 起正式常態運作</div>
+      <ul class="plain">
+        <li>全班有 <b>4 位同學</b> 依個人需求或習慣自行準備</li>
+        <li>其餘同學皆穩定參與訂購</li>
+        <li>每週依實際訂購，<b>使用者付費</b></li>
+      </ul>
+      <div class="stress">目前已經形成固定的自主訂購模式。</div>
+    </section>
+
+    <!-- 6 -->
+    <section class="slide">
+      <div class="kicker">家長最關心的</div>
+      <h1>之前的贊助結餘，怎麼處理？</h1>
+      <div class="vflow">
+        <div class="vrow"><span class="mark">1</span><span>先前贊助結餘</span></div>
+        <div class="vdown">↓</div>
+        <div class="vrow key"><span class="mark">2</span><span>依比例轉為孩子個人專屬的 <b>「預扣額度」</b></span></div>
+        <div class="vdown">↓</div>
+        <div class="vrow"><span class="mark">3</span><span>孩子參與訂購時，逐週自動折抵</span></div>
+        <div class="vdown">↓</div>
+        <div class="vrow"><span class="mark">4</span><span>直到額度扣抵完畢為止</span></div>
+      </div>
+      <div class="note">因涉及家庭個人隱私，群組內不公開個別明細。<br>剩餘額度老師會個別向孩子告知，請家長放心。</div>
+    </section>
+
+    <!-- 7 -->
+    <section class="slide">
+      <div class="kicker">教室常備小點心</div>
+      <h1>沒有外訂的日子，也不用擔心</h1>
+      <p class="lead">點心並非每個上課日都有固定外訂，因此老師會運用班級公費採購大包裝批發餅乾放在教室備用。</p>
+      <div class="stress">包含未參加外訂的同學，<br>肚子餓時都可以自由拿取、補充元氣。</div>
+      <p style="margin-top:1.4rem;font-size:1.3rem;font-weight:700;color:var(--ink)">確保班上每一位孩子都能被照顧到。</p>
+    </section>
+
+    <!-- 8 -->
+    <section class="slide cover">
+      <div class="kicker">結尾</div>
+      <h1>謝謝家長一路以來的支持與信任</h1>
+      <p class="lead">面對國三的各項考驗，孩子面對的不只是考試，也是生活節奏與自我管理的挑戰。</p>
+      <p>老師會繼續引導孩子，一步一步穩定往前走。</p>
+      <div class="stress">我們一起在背後穩穩接住孩子，給他們最需要的支持！</div>
+      <div class="sign">三年23班 高帆老師</div>
+    </section>
+
+  </div>
+
+  <div class="bar">
+    <div class="who">115學年度 三年23班班親會</div>
+    <div class="ctrl">
+      <button id="prev" type="button">上一頁</button>
+      <span class="count" id="count">1 / 8</span>
+      <button id="next" type="button">下一頁</button>
+      <button id="fs" type="button">全螢幕</button>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+      var total = slides.length;
+      var i = 0;
+
+      var rail = document.getElementById('rail');
+      for (var n = 0; n < total; n++) rail.appendChild(document.createElement('span'));
+      var bars = rail.children;
+
+      var prev = document.getElementById('prev');
+      var next = document.getElementById('next');
+      var fs = document.getElementById('fs');
+      var count = document.getElementById('count');
+      var deck = document.querySelector('.deck');
+
+      function isMobileMode() {
+        return window.matchMedia('(max-width: 1024px)').matches;
+      }
+
+      function updateUI() {
+        if (!isMobileMode()) {
+          for (var n = 0; n < total; n++) {
+            slides[n].classList.toggle('active', n === i);
+          }
+        }
+        for (var n = 0; n < total; n++) {
+          bars[n].classList.toggle('done', n <= i);
+        }
+        count.textContent = (i + 1) + ' / ' + total;
+        prev.disabled = (i === 0);
+        next.disabled = (i === total - 1);
+      }
+
+      function show(k) {
+        i = Math.max(0, Math.min(total - 1, k));
+        updateUI();
+
+        if (isMobileMode()) {
+          slides[i].scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+
+      prev.addEventListener('click', function () { show(i - 1); });
+      next.addEventListener('click', function () { show(i + 1); });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { show(i + 1); e.preventDefault(); }
+        else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { show(i - 1); e.preventDefault(); }
+        else if (e.key === 'Home') { show(0); }
+        else if (e.key === 'End') { show(total - 1); }
+      });
+
+      fs.addEventListener('click', function () {
+        if (document.fullscreenElement) document.exitFullscreen();
+        else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+      });
+      document.addEventListener('fullscreenchange', function () {
+        fs.textContent = document.fullscreenElement ? '離開全螢幕' : '全螢幕';
+      });
+
+      var scrollTicking = false;
+      deck.addEventListener('scroll', function () {
+        if (!isMobileMode()) return;
+        if (scrollTicking) return;
+        scrollTicking = true;
+
+        requestAnimationFrame(function () {
+          var vpTop = deck.scrollTop;
+          var closest = 0;
+          var minDist = Infinity;
+
+          slides.forEach(function (s, index) {
+            var dist = Math.abs(s.offsetTop - deck.offsetTop - vpTop);
+            if (dist < minDist) { minDist = dist; closest = index; }
+          });
+
+          i = closest;
+          updateUI();
+          scrollTicking = false;
+        });
+      });
+
+      show(0);
+    })();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,1935 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>守時原則與服儀提醒</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0f2b4c;
+      --navy-deep: #0a1d34;
+      --navy-2: #1b4a7a;
+      --blue-gray: #5c7594;
+      --pale: #eef3f9;
+      --pale-2: #dde7f2;
+      --white: #ffffff;
+      --yellow: #f0ad3d;
+      --red: #c4453f;
+      --ink: #1b2733;
+      --radius: 22px;
+      --radius-sm: 14px;
+      --stage-w: 1920px;
+      --stage-h: 1080px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      background: var(--navy-deep);
+      color: var(--ink);
+      overscroll-behavior: none;
+    }
+
+    /* ---------- viewport / stage ---------- */
+    /* ============ PLATFORM TOPBAR (共用導覽列) ============ */
+    .platform-topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 44px;
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 20px;
+      background: linear-gradient(180deg, #0E2141, #0A1830);
+      border-bottom: 1px solid rgba(242, 169, 59, 0.35);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+    }
+
+    .platform-topbar .ptb-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #F2A93B;
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: .5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .platform-topbar .ptb-brand .ptb-logo {
+      font-size: 16px;
+    }
+
+    .platform-topbar .ptb-links {
+      display: flex;
+      gap: 6px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .platform-topbar .ptb-links::-webkit-scrollbar {
+      display: none;
+    }
+
+    .platform-topbar a.ptb-link {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: #C7D2E6;
+      text-decoration: none;
+      font-size: 12.5px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.04);
+      transition: all .2s ease;
+      white-space: nowrap;
+    }
+
+    .platform-topbar a.ptb-link:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .platform-topbar a.ptb-link.active {
+      background: #F2A93B;
+      border-color: #F2A93B;
+      color: #0A1830;
+    }
+
+    :fullscreen .platform-topbar,
+    :-webkit-full-screen .platform-topbar {
+      display: none !important;
+    }
+
+    :fullscreen #viewport,
+    :-webkit-full-screen #viewport {
+      inset: 0 !important;
+    }
+
+    #viewport {
+      position: fixed;
+      inset: 44px 0 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--navy-deep);
+      overflow: hidden;
+    }
+
+    #stage {
+      position: relative;
+      width: var(--stage-w);
+      height: var(--stage-h);
+      flex: 0 0 auto;
+      transform-origin: center center;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(180deg, #ffffff 0%, var(--pale) 100%);
+      padding: 72px 96px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(16px);
+      transition: opacity .5s ease, transform .5s ease;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .slide-eyebrow {
+      font-size: 22px;
+      color: var(--navy-2);
+      font-weight: 700;
+      letter-spacing: .02em;
+      margin-bottom: 6px;
+    }
+
+    .slide-title {
+      font-size: 56px;
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1.25;
+      margin: 0 0 28px 0;
+    }
+
+    .slide-body {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+    }
+
+    /* ---------- decorative slide number tag ---------- */
+    .tag {
+      position: absolute;
+      top: 64px;
+      right: 96px;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--blue-gray);
+    }
+
+    /* ===================== SLIDE 1 - COVER ===================== */
+    .slide-cover {
+      background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 55%, var(--navy-2) 100%);
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0;
+    }
+
+    .cover-inner {
+      max-width: 1200px;
+    }
+
+    .cover-kicker {
+      display: inline-block;
+      font-size: 24px;
+      color: var(--yellow);
+      font-weight: 700;
+      letter-spacing: .08em;
+      margin-bottom: 28px;
+      padding: 10px 28px;
+      border: 2px solid rgba(240, 173, 61, .55);
+      border-radius: 999px;
+    }
+
+    .cover-title {
+      font-size: 104px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.15;
+      margin: 0 0 20px 0;
+    }
+
+    .cover-sub {
+      font-size: 44px;
+      font-weight: 500;
+      color: #dce8fa;
+      margin: 0 0 56px 0;
+    }
+
+    .cover-strip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      font-size: 28px;
+      font-weight: 700;
+      color: #9fc0e8;
+    }
+
+    .cover-strip span.dot {
+      color: var(--yellow);
+      font-weight: 900;
+    }
+
+    /* ===================== SLIDE 2 - two cards ===================== */
+    .two-col {
+      display: flex;
+      gap: 48px;
+      width: 100%;
+    }
+
+    .card-big {
+      flex: 1;
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 48px 44px;
+      box-shadow: 0 12px 30px rgba(15, 43, 76, .08);
+      display: flex;
+      flex-direction: column;
+      border-top: 8px solid var(--navy-2);
+    }
+
+    .card-big.alt {
+      border-top-color: var(--yellow);
+    }
+
+    .card-num {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--blue-gray);
+      margin-bottom: 14px;
+    }
+
+    .card-heading {
+      font-size: 38px;
+      font-weight: 900;
+      color: var(--navy);
+      margin: 0 0 26px 0;
+      line-height: 1.3;
+    }
+
+    .card-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      flex: 1;
+    }
+
+    .card-list li {
+      font-size: 26px;
+      color: var(--ink);
+      padding: 14px 0 14px 40px;
+      position: relative;
+      border-bottom: 1px solid var(--pale-2);
+      line-height: 1.5;
+    }
+
+    .card-list li:last-child {
+      border-bottom: none;
+    }
+
+    .card-list li::before {
+      content: "›";
+      position: absolute;
+      left: 0;
+      top: 12px;
+      color: var(--navy-2);
+      font-weight: 900;
+      font-size: 28px;
+    }
+
+    .footnote-bar {
+      margin-top: 36px;
+      background: var(--navy);
+      color: #fff;
+      border-radius: var(--radius-sm);
+      padding: 24px 36px;
+      font-size: 26px;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    /* ===================== SLIDE 3 - 730 ===================== */
+    .split-hero {
+      display: flex;
+      align-items: center;
+      gap: 72px;
+      width: 100%;
+      height: 100%;
+    }
+
+    .hero-number {
+      font-size: 280px;
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1;
+      flex: 0 0 auto;
+    }
+
+    .hero-number sub-label {
+      display: block;
+    }
+
+    .hero-side {
+      flex: 1;
+    }
+
+    .hero-lead {
+      font-size: 34px;
+      font-weight: 700;
+      color: var(--navy-2);
+      margin: 0 0 32px 0;
+      line-height: 1.5;
+    }
+
+    .check-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .check-list li {
+      font-size: 27px;
+      color: var(--ink);
+      padding: 12px 0 12px 46px;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    .check-list li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      top: 10px;
+      color: var(--white);
+      background: var(--navy-2);
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    /* ===================== image slides (4 & 8) ===================== */
+    .image-slide-body {
+      display: flex;
+      gap: 56px;
+      width: 100%;
+      height: 100%;
+    }
+
+    .image-panel {
+      flex: 0 0 46%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .image-frame {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--pale-2);
+      box-shadow: 0 14px 34px rgba(15, 43, 76, .14);
+      cursor: pointer;
+      border: 1px solid var(--pale-2);
+    }
+
+    .image-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      background: #fff;
+      display: block;
+    }
+
+    .image-frame .zoom-hint {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: rgba(15, 43, 76, .82);
+      color: #fff;
+      font-size: 18px;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform .2s ease;
+    }
+
+    .image-frame:hover .zoom-hint {
+      transform: scale(1.06);
+    }
+
+    .image-caption {
+      position: absolute;
+      bottom: 18px;
+      left: 18px;
+      right: 18px;
+      background: rgba(10, 29, 52, .72);
+      color: #fff;
+      font-size: 18px;
+      padding: 10px 18px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .text-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 26px;
+    }
+
+    .big-line {
+      font-size: 52px;
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1.3;
+    }
+
+    .big-line .accent {
+      color: var(--red);
+    }
+
+    .note-box {
+      background: var(--white);
+      border-left: 8px solid var(--navy-2);
+      border-radius: var(--radius-sm);
+      padding: 26px 30px;
+      font-size: 24px;
+      line-height: 1.6;
+      color: var(--ink);
+      box-shadow: 0 8px 20px rgba(15, 43, 76, .06);
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .chip {
+      background: var(--pale);
+      color: var(--navy-2);
+      border: 1px solid var(--pale-2);
+      font-size: 22px;
+      font-weight: 700;
+      padding: 10px 22px;
+      border-radius: 999px;
+    }
+
+    .warn-line {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--red);
+      background: #fdf1f0;
+      border: 1px solid #f3d3d1;
+      padding: 18px 26px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* ===================== SLIDE 5 - steps ===================== */
+    .steps-body {
+      display: flex;
+      gap: 56px;
+      width: 100%;
+      height: 100%;
+      align-items: stretch;
+    }
+
+    .steps-col {
+      flex: 1.4;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0;
+    }
+
+    .step-item {
+      background: var(--white);
+      border-radius: var(--radius-sm);
+      padding: 26px 34px;
+      box-shadow: 0 8px 20px rgba(15, 43, 76, .06);
+      display: flex;
+      align-items: center;
+      gap: 26px;
+    }
+
+    .step-circle {
+      flex: 0 0 auto;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--navy-2);
+      color: #fff;
+      font-size: 28px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .step-text {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .step-sub {
+      font-size: 20px;
+      color: var(--blue-gray);
+      font-weight: 500;
+      margin-top: 4px;
+    }
+
+    .step-arrow {
+      text-align: center;
+      font-size: 30px;
+      color: var(--blue-gray);
+      padding: 10px 0;
+    }
+
+    .side-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 24px;
+    }
+
+    .highlight-card {
+      background: var(--navy);
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 44px 36px;
+      text-align: center;
+      font-size: 34px;
+      font-weight: 900;
+      box-shadow: 0 12px 26px rgba(15, 43, 76, .18);
+    }
+
+    .fine-note {
+      font-size: 20px;
+      color: var(--blue-gray);
+      line-height: 1.7;
+      background: var(--pale);
+      border-radius: var(--radius-sm);
+      padding: 22px 26px;
+    }
+
+    /* ===================== SLIDE 6 - 3 habits ===================== */
+    .habit-row {
+      display: flex;
+      gap: 36px;
+      width: 100%;
+      height: 100%;
+      align-items: center;
+    }
+
+    .habit-card {
+      flex: 1;
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 44px 30px;
+      text-align: center;
+      box-shadow: 0 10px 24px rgba(15, 43, 76, .08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .habit-num {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--white);
+      background: var(--navy-2);
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .habit-label {
+      font-size: 22px;
+      color: var(--blue-gray);
+      font-weight: 700;
+    }
+
+    .habit-text {
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1.4;
+    }
+
+    /* ===================== SLIDE 7 - compare uniform ===================== */
+    .compare-row {
+      display: flex;
+      gap: 44px;
+      width: 100%;
+      height: 100%;
+    }
+
+    .compare-card {
+      flex: 1;
+      border-radius: var(--radius);
+      padding: 42px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .compare-card.uniform {
+      background: var(--navy);
+      color: #fff;
+    }
+
+    .compare-card.sport {
+      background: var(--white);
+      box-shadow: 0 10px 24px rgba(15, 43, 76, .08);
+    }
+
+    .compare-tag {
+      font-size: 22px;
+      font-weight: 700;
+      opacity: .85;
+    }
+
+    .compare-title {
+      font-size: 44px;
+      font-weight: 900;
+    }
+
+    .compare-card.uniform .compare-title {
+      color: #fff;
+    }
+
+    .compare-card.sport .compare-title {
+      color: var(--navy);
+    }
+
+    .compare-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      flex: 1;
+    }
+
+    .compare-list li {
+      font-size: 24px;
+      padding: 10px 0 10px 34px;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    .compare-card.uniform .compare-list li {
+      border-bottom: 1px solid rgba(255, 255, 255, .18);
+    }
+
+    .compare-card.sport .compare-list li {
+      border-bottom: 1px solid var(--pale-2);
+    }
+
+    .compare-list li::before {
+      content: "–";
+      position: absolute;
+      left: 0;
+      font-weight: 900;
+    }
+
+    .compare-foot {
+      margin-top: auto;
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+    }
+
+    .foot-pill {
+      background: var(--yellow);
+      color: var(--navy-deep);
+      font-weight: 900;
+      font-size: 28px;
+      padding: 16px 34px;
+      border-radius: 999px;
+    }
+
+    /* ===================== SLIDE 9 - right/wrong ===================== */
+    .rw-row {
+      display: flex;
+      gap: 44px;
+      width: 100%;
+      height: 100%;
+    }
+
+    .rw-card {
+      flex: 1;
+      border-radius: var(--radius);
+      padding: 40px 38px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .rw-card.wrong {
+      background: #fdf1f0;
+      border: 2px solid #f0c6c3;
+    }
+
+    .rw-card.right {
+      background: #eef8f1;
+      border: 2px solid #c6e6d0;
+    }
+
+    .rw-title {
+      font-size: 32px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .rw-card.wrong .rw-title {
+      color: var(--red);
+    }
+
+    .rw-card.right .rw-title {
+      color: #2f7d4f;
+    }
+
+    .rw-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .rw-list li {
+      font-size: 25px;
+      padding: 12px 0;
+      line-height: 1.5;
+      color: var(--ink);
+    }
+
+    .rw-bottom {
+      margin-top: 8px;
+      text-align: center;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--navy);
+      background: var(--pale);
+      border-radius: var(--radius-sm);
+      padding: 20px 30px;
+    }
+
+    /* ===================== SLIDE 10 - summary ===================== */
+    .grid4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 30px;
+      width: 100%;
+    }
+
+    .grid-item {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 36px 24px;
+      text-align: center;
+      box-shadow: 0 10px 22px rgba(15, 43, 76, .08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .grid-icon {
+      font-size: 56px;
+    }
+
+    .grid-text {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.4;
+    }
+
+    .summary-quote {
+      margin-top: 44px;
+      text-align: center;
+      font-size: 30px;
+      color: var(--navy-2);
+      font-weight: 500;
+      line-height: 1.7;
+    }
+
+    .summary-thanks {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 36px;
+      color: var(--navy);
+      font-weight: 900;
+    }
+
+    /* ---------- controls ---------- */
+    #controls {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      z-index: 40;
+      pointer-events: none;
+    }
+
+    #controls>* {
+      pointer-events: auto;
+    }
+
+    .ctrl-btn {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .12);
+      border: 1px solid rgba(255, 255, 255, .28);
+      color: #fff;
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(6px);
+      transition: background .2s ease, transform .15s ease;
+    }
+
+    .ctrl-btn:hover {
+      background: rgba(255, 255, 255, .24);
+      transform: translateY(-2px);
+    }
+
+    .ctrl-btn:active {
+      transform: translateY(0);
+    }
+
+    #pageIndicator {
+      min-width: 120px;
+      text-align: center;
+      background: rgba(255, 255, 255, .12);
+      border: 1px solid rgba(255, 255, 255, .28);
+      color: #fff;
+      font-size: 20px;
+      font-weight: 700;
+      padding: 14px 22px;
+      border-radius: 999px;
+      backdrop-filter: blur(6px);
+      letter-spacing: .05em;
+    }
+
+    #progressTrack {
+      position: fixed;
+      top: 44px;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: rgba(255, 255, 255, .14);
+      z-index: 41;
+    }
+
+    :fullscreen #progressTrack,
+    :-webkit-full-screen #progressTrack {
+      top: 0 !important;
+    }
+
+    #progressFill {
+      height: 100%;
+      width: 10%;
+      background: linear-gradient(90deg, var(--yellow), #f7cf7c);
+      transition: width .45s ease;
+    }
+
+    /* ---------- lightbox ---------- */
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(6, 14, 26, .92);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 5vh 5vw;
+    }
+
+    #lightbox.open {
+      display: flex;
+    }
+
+    #lightboxImg {
+      max-width: 100%;
+      max-height: 78vh;
+      object-fit: contain;
+      border-radius: 10px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .5);
+      background: #fff;
+    }
+
+    #lightboxCaption {
+      color: #fff;
+      font-size: 20px;
+      margin-top: 22px;
+      text-align: center;
+      opacity: .9;
+    }
+
+    #lightboxHint {
+      color: #b9c9dd;
+      font-size: 16px;
+      margin-top: 10px;
+      letter-spacing: .02em;
+    }
+
+    #lightboxClose {
+      position: fixed;
+      top: 28px;
+      right: 36px;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .14);
+      border: 1px solid rgba(255, 255, 255, .3);
+      color: #fff;
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 101;
+    }
+
+    #lightboxClose:hover {
+      background: rgba(255, 255, 255, .26);
+    }
+
+    /* ---------- placeholder for missing image ---------- */
+    .img-missing {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      background: repeating-linear-gradient(45deg, #eef3f9, #eef3f9 12px, #e2eaf4 12px, #e2eaf4 24px);
+      color: var(--navy-2);
+      text-align: center;
+      padding: 20px;
+    }
+
+    .img-missing .mm-icon {
+      font-size: 48px;
+    }
+
+    .img-missing .mm-text {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.6;
+    }
+
+    /* ---------- fullscreen button icon state ---------- */
+    #fsIcon {
+      font-size: 22px;
+    }
+
+    /* ===================== responsive: scale desktop stage ===================== */
+    /* stage scaling handled in JS via transform */
+
+    /* ===================== mobile & tablet layout (<= 1024px) ===================== */
+    @media (max-width:1024px) {
+
+      /* 調整 Topbar 佈局適應較窄畫面 */
+      .platform-topbar {
+        height: auto;
+        flex-direction: column;
+        padding: 12px 16px;
+        gap: 12px;
+      }
+
+      .platform-topbar .ptb-brand {
+        font-size: 14px;
+        width: 100%;
+        justify-content: center;
+      }
+
+      .platform-topbar .ptb-links {
+        width: 100%;
+        justify-content: flex-start;
+        padding-bottom: 4px;
+      }
+
+      .platform-topbar a.ptb-link {
+        font-size: 13px;
+        padding: 8px 14px;
+      }
+
+      #progressTrack {
+        top: 94px;
+      }
+
+      /* 配合加高的頂部選單位移 */
+
+      #viewport {
+        position: fixed;
+        inset: 0;
+        padding-top: 94px;
+        display: block;
+        overflow-y: auto;
+        overflow-x: hidden;
+        /* 讓長度超過螢幕的內容可以平順滾動，並在段落處稍微吸附 */
+        scroll-snap-type: y proximity;
+      }
+
+      #stage {
+        position: static;
+        width: 100%;
+        height: auto;
+        transform: none !important;
+      }
+
+      .slide {
+        position: relative;
+        width: 100%;
+        min-height: calc(100vh - 94px);
+        min-height: calc(100dvh - 94px);
+        height: auto;
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+        scroll-snap-align: start;
+        padding: 40px 24px 120px 24px;
+        overflow: visible;
+      }
+
+      /* 響應式文字 (clamp) 與間距 */
+      .slide-title {
+        font-size: clamp(30px, 6vw, 44px);
+        margin-bottom: 20px;
+        line-height: 1.3;
+      }
+
+      .slide-eyebrow {
+        font-size: 16px;
+      }
+
+      .tag {
+        top: 20px;
+        right: 24px;
+        font-size: 14px;
+        position: absolute;
+      }
+
+      /* 通用佈局切換為垂直 */
+      .two-col,
+      .image-slide-body,
+      .split-hero,
+      .steps-body,
+      .habit-row,
+      .compare-row,
+      .rw-row {
+        flex-direction: column;
+        gap: 24px;
+        height: auto;
+      }
+
+      /* 卡片與清單縮放 */
+      .card-big {
+        padding: 32px 24px;
+        border-top-width: 6px;
+      }
+
+      .card-num {
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+
+      .card-heading {
+        font-size: 26px;
+        margin-bottom: 20px;
+      }
+
+      .card-list li {
+        font-size: 20px;
+        padding: 12px 0 12px 32px;
+      }
+
+      .card-list li::before {
+        top: 10px;
+        font-size: 24px;
+      }
+
+      .footnote-bar {
+        font-size: 18px;
+        padding: 16px 20px;
+        margin-top: 24px;
+      }
+
+      /* Cover */
+      .cover-title {
+        font-size: clamp(44px, 10vw, 72px);
+        margin-bottom: 16px;
+      }
+
+      .cover-sub {
+        font-size: clamp(22px, 5vw, 32px);
+        margin-bottom: 32px;
+      }
+
+      .cover-kicker {
+        font-size: 16px;
+        padding: 8px 20px;
+        margin-bottom: 20px;
+      }
+
+      .cover-strip {
+        font-size: 18px;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      /* 7:30 Slide */
+      .hero-number {
+        font-size: clamp(120px, 25vw, 180px);
+        text-align: center;
+      }
+
+      .hero-lead {
+        font-size: 24px;
+        margin-bottom: 24px;
+      }
+
+      .check-list li {
+        font-size: 20px;
+        padding: 10px 0 10px 40px;
+      }
+
+      .check-list li::before {
+        width: 26px;
+        height: 26px;
+        font-size: 16px;
+        top: 8px;
+      }
+
+      /* Images */
+      .image-panel {
+        flex: 0 0 auto;
+        height: auto;
+        aspect-ratio: 16/10;
+        width: 100%;
+        min-height: 240px;
+      }
+
+      .big-line {
+        font-size: clamp(26px, 6vw, 36px);
+      }
+
+      .note-box {
+        font-size: 20px;
+        padding: 20px;
+      }
+
+      .chip {
+        font-size: 16px;
+        padding: 8px 16px;
+      }
+
+      .warn-line {
+        font-size: 18px;
+        padding: 16px 20px;
+      }
+
+      /* Steps */
+      .step-item {
+        padding: 20px;
+        gap: 20px;
+      }
+
+      .step-circle {
+        width: 48px;
+        height: 48px;
+        font-size: 20px;
+      }
+
+      .step-text {
+        font-size: 22px;
+      }
+
+      .step-sub {
+        font-size: 16px;
+      }
+
+      .step-arrow {
+        font-size: 24px;
+        padding: 6px 0;
+      }
+
+      .highlight-card {
+        font-size: 24px;
+        padding: 28px 20px;
+      }
+
+      .fine-note {
+        font-size: 16px;
+        padding: 18px 20px;
+      }
+
+      /* Habits */
+      .habit-card {
+        padding: 28px 20px;
+      }
+
+      .habit-num {
+        width: 44px;
+        height: 44px;
+        font-size: 18px;
+      }
+
+      .habit-label {
+        font-size: 18px;
+      }
+
+      .habit-text {
+        font-size: 24px;
+      }
+
+      /* Compare */
+      .compare-card {
+        padding: 28px 24px;
+      }
+
+      .compare-tag {
+        font-size: 18px;
+      }
+
+      .compare-title {
+        font-size: 32px;
+      }
+
+      .compare-list li {
+        font-size: 20px;
+        padding: 10px 0 10px 28px;
+      }
+
+      .foot-pill {
+        font-size: 20px;
+        padding: 12px 24px;
+      }
+
+      .compare-foot {
+        flex-wrap: wrap;
+      }
+
+      /* Right/Wrong */
+      .rw-card {
+        padding: 28px 24px;
+      }
+
+      .rw-title {
+        font-size: 24px;
+      }
+
+      .rw-list li {
+        font-size: 18px;
+        padding: 10px 0;
+      }
+
+      .rw-bottom {
+        font-size: 18px;
+        padding: 16px 20px;
+      }
+
+      /* Summary */
+      .grid4 {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+
+      .grid-item {
+        padding: 24px 16px;
+      }
+
+      .grid-icon {
+        font-size: 40px;
+      }
+
+      .grid-text {
+        font-size: 18px;
+      }
+
+      .summary-quote {
+        font-size: 20px;
+        margin-top: 32px;
+      }
+
+      .summary-thanks {
+        font-size: 26px;
+        margin-top: 16px;
+      }
+
+      /* Controls */
+      #controls {
+        bottom: 16px;
+      }
+
+      .ctrl-btn {
+        width: 48px;
+        height: 48px;
+        font-size: 20px;
+      }
+
+      #pageIndicator {
+        font-size: 16px;
+        padding: 12px 18px;
+        min-width: 100px;
+      }
+    }
+
+    @media (max-width:480px) {
+      .grid4 {
+        grid-template-columns: 1fr;
+      }
+
+      .cover-strip span.dot {
+        display: none;
+      }
+
+      .cover-strip {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .image-panel {
+        aspect-ratio: 4/3;
+      }
+
+      .step-item {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="platform-topbar">
+    <div class="ptb-brand"><span class="ptb-logo">🎓</span><span>115學年度 三年23班｜國三班親會資訊平台</span></div>
+    <div class="ptb-links">
+    <a href="index.html" class="ptb-link">🏠 平台首頁</a>
+    <a href="calendar.html" class="ptb-link">📅 升學行事曆</a>
+    <a href="daily-safety.html" class="ptb-link">🛡️ 生活與安全</a>
+    <a href="conduct-dress-code.html" class="ptb-link active">👔 守時與服儀</a>
+    <a href="class-fund-snack.html" class="ptb-link">💰 班費與點心</a>
+    <a href="exam-change.html" class="ptb-link">📚 段考變革</a>
+    </div>
+  </nav>
+
+  <div id="progressTrack">
+    <div id="progressFill"></div>
+  </div>
+
+  <div id="viewport">
+    <div id="stage">
+
+      <!-- SLIDE 1 : COVER -->
+      <section class="slide slide-cover active" data-index="0">
+        <div class="cover-inner">
+          <div class="cover-kicker">國三家長座談會</div>
+          <h1 class="cover-title">守時原則與服儀提醒</h1>
+          <div class="cover-strip">
+            <span>準時到校</span><span class="dot">×</span>
+            <span>安全上學</span><span class="dot">×</span>
+            <span>正確穿著</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2 : 兩件事 -->
+      <section class="slide" data-index="1">
+        <span class="tag">02 / 11</span>
+        <div class="slide-eyebrow">今日重點</div>
+        <h2 class="slide-title">孩子每天都會遇到的兩件小事</h2>
+        <div class="slide-body">
+          <div class="two-col">
+            <div class="card-big">
+              <div class="card-num">01</div>
+              <h3 class="card-heading">準時到校・安全上學</h3>
+              <ul class="card-list">
+                <li>7:30 準時到校</li>
+                <li>雨天安全優先</li>
+                <li>遲到主動說明</li>
+              </ul>
+            </div>
+            <div class="card-big alt">
+              <div class="card-num">02</div>
+              <h3 class="card-heading">制服日・正確穿著</h3>
+              <ul class="card-list">
+                <li>制服日穿制服</li>
+                <li>平日穿運動服</li>
+                <li>天冷可以加保暖，但不能任意取代校服</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="footnote-bar">生活規範看似小事，其實都是孩子學習自主管理的一部分。</div>
+      </section>
+
+      <!-- SLIDE 3 : 7:30 -->
+      <section class="slide" data-index="2">
+        <span class="tag">03 / 11</span>
+        <div class="slide-eyebrow">第一個重點</div>
+        <h2 class="slide-title">7:30 準時到校</h2>
+        <div class="slide-body">
+          <div class="split-hero">
+            <div class="hero-number">7:30</div>
+            <div class="hero-side">
+              <p class="hero-lead">準時到校，是孩子對自己負責的第一步。</p>
+              <ul class="check-list">
+                <li>提前規劃上學時間</li>
+                <li>預留交通可能發生的狀況</li>
+                <li>避免壓線到校</li>
+                <li>培養守時與自我管理習慣</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4 : 圖片一 -->
+      <section class="slide" data-index="3">
+        <span class="tag">04 / 11</span>
+        <div class="slide-eyebrow">學校的提醒，其實有一個重要原則</div>
+        <h2 class="slide-title">安全 <span style="color:var(--red)">＞</span> 趕時間</h2>
+        <div class="slide-body">
+          <div class="image-slide-body">
+            <div class="image-panel">
+              <div class="image-frame zoomable" data-caption="守時有原則・安全要優先">
+                <img src="S__17776713.jpg" alt="守時有原則・安全要優先" loading="lazy"
+                  onerror="this.closest('.image-frame').innerHTML='&lt;div class=\'img-missing\'&gt;&lt;div class=\'mm-icon\'&gt;🖼&lt;/div&gt;&lt;div class=\'mm-text\'&gt;找不到圖片 S__17776713.jpg&lt;br&gt;請將此圖片與 HTML 放在同一資料夾&lt;/div&gt;&lt;/div&gt;'">
+                <div class="zoom-hint">⛶ 點擊放大</div>
+                <div class="image-caption">點擊圖片即可放大</div>
+              </div>
+            </div>
+            <div class="text-panel">
+              <div class="note-box">
+                請家長特別注意：學校要求準時到校，但遇到特殊天候或交通狀況時，安全仍然是第一優先。
+              </div>
+              <div class="chip-row">
+                <span class="chip">大雨</span>
+                <span class="chip">積水</span>
+                <span class="chip">視線不佳</span>
+                <span class="chip">交通受阻</span>
+              </div>
+              <div class="warn-line">不要為了避免遲到而搶快、冒險趕路。</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5 : 晚到怎麼辦 -->
+      <section class="slide" data-index="4">
+        <span class="tag">05 / 11</span>
+        <div class="slide-eyebrow">遲到規範說明</div>
+        <h2 class="slide-title">晚到不可怕，重要的是安全與誠實</h2>
+        <div class="slide-body">
+          <div class="steps-body">
+            <div class="steps-col">
+              <div class="step-item">
+                <div class="step-circle">①</div>
+                <div>
+                  <div class="step-text">確認安全</div>
+                  <div class="step-sub">不要為了趕時間冒險</div>
+                </div>
+              </div>
+              <div class="step-arrow">↓</div>
+              <div class="step-item">
+                <div class="step-circle">②</div>
+                <div>
+                  <div class="step-text">主動說明</div>
+                  <div class="step-sub">若因天候或交通狀況影響而晚到，主動向導師說明原因</div>
+                </div>
+              </div>
+              <div class="step-arrow">↓</div>
+              <div class="step-item">
+                <div class="step-circle">③</div>
+                <div>
+                  <div class="step-text">接受提醒</div>
+                  <div class="step-sub">依學校規定完成後續程序</div>
+                </div>
+              </div>
+            </div>
+            <div class="side-col">
+              <div class="highlight-card">安全第一，不搶快、不冒險。</div>
+              <div class="fine-note">每日 7:30 為到校時間基準；每週累計達 3 次遲到，將收到「學生遲到通知與輔導回條」。</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6 : 家長怎麼幫忙 -->
+      <section class="slide" data-index="5">
+        <span class="tag">06 / 11</span>
+        <div class="slide-eyebrow">家長可以怎麼幫忙？</div>
+        <h2 class="slide-title">家長只要幫孩子建立 3 個習慣</h2>
+        <div class="slide-body">
+          <div class="habit-row">
+            <div class="habit-card">
+              <div class="habit-num">1</div>
+              <div class="habit-label">前一天</div>
+              <div class="habit-text">確認隔天交通與天氣</div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-num">2</div>
+              <div class="habit-label">早上</div>
+              <div class="habit-text">預留充足上學時間</div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-num">3</div>
+              <div class="habit-label">遇到特殊狀況</div>
+              <div class="habit-text">安全優先，主動聯絡與說明</div>
+            </div>
+          </div>
+        </div>
+        <div class="footnote-bar">守時是習慣，安全是底線。</div>
+      </section>
+
+      <!-- SLIDE 7 : 制服日與平常日 -->
+      <section class="slide" data-index="6">
+        <span class="tag">07 / 11</span>
+        <div class="slide-eyebrow">第二個重點</div>
+        <h2 class="slide-title">制服日怎麼穿？</h2>
+        <div class="slide-body">
+          <div class="compare-row">
+            <div class="compare-card uniform">
+              <div class="compare-tag">制服日</div>
+              <div class="compare-title">穿學校制服</div>
+              <ul class="compare-list">
+                <li>每週一次制服日</li>
+                <li>穿著本校制服</li>
+                <li>不混穿運動服或便服</li>
+                <li style="color:var(--yellow);font-weight:700;">3年23班制服日訂為<strong>星期三</strong>，請提醒孩子當天穿著制服到校</li>
+              </ul>
+            </div>
+            <div class="compare-card sport">
+              <div class="compare-tag" style="color:var(--blue-gray)">平常日</div>
+              <div class="compare-title">穿學校運動服</div>
+              <ul class="compare-list">
+                <li>其他上課日穿本校運動服</li>
+                <li>依學校規定穿著</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="compare-foot">
+          <div class="foot-pill">制服日：制服</div>
+          <div class="foot-pill">平常日：運動服</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8 : 冬季制服上衣購買說明 -->
+      <section class="slide" data-index="7">
+        <span class="tag">08 / 11</span>
+        <div class="slide-eyebrow">服儀規範補充</div>
+        <h2 class="slide-title">冬季制服上衣購買說明</h2>
+        <div class="slide-body" style="flex-direction:column;justify-content:center;gap:32px;">
+          <div class="note-box" style="font-size:clamp(22px,3vw,28px);">
+            冬季制服上衣可先不用購買，待學校研議後再公告通知。冬季學校會以保暖原則為優先，採彈性原則。
+          </div>
+          <div class="note-box" style="border-left-color:var(--yellow);background:#fff8ec;font-size:clamp(20px,2.6vw,26px);">
+            <div style="font-weight:900;color:var(--yellow);margin-bottom:10px;">⭐ 小提醒</div>
+            <div>制服日請依規定穿著制服，不混穿便服。</div>
+            <div style="color:var(--blue-gray);font-weight:500;margin-top:6px;">※ 運動服外套可通用於制服日或運動日。</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 9 : 圖片二 -->
+      <section class="slide" data-index="8">
+        <span class="tag">09 / 11</span>
+        <div class="slide-eyebrow">服儀規範</div>
+        <h2 class="slide-title">天冷可以保暖，但校服不能被取代</h2>
+        <div class="slide-body">
+          <div class="image-slide-body">
+            <div class="image-panel">
+              <div class="image-frame zoomable" data-caption="制服日 · 正確保暖穿法">
+                <img src="S__17801244.jpg" alt="制服日" loading="lazy"
+                  onerror="this.closest('.image-frame').innerHTML='&lt;div class=\'img-missing\'&gt;&lt;div class=\'mm-icon\'&gt;🖼&lt;/div&gt;&lt;div class=\'mm-text\'&gt;找不到圖片 S__17801244.jpg&lt;br&gt;請將此圖片與 HTML 放在同一資料夾&lt;/div&gt;&lt;/div&gt;'">
+                <div class="zoom-hint">⛶ 點擊放大</div>
+                <div class="image-caption">點擊圖片即可放大</div>
+              </div>
+            </div>
+            <div class="text-panel">
+              <div class="note-box">正確的概念是：在學校規定服裝之外增加保暖層。</div>
+              <div class="steps-col" style="gap:0">
+                <div class="step-item" style="padding:14px 20px;">
+                  <div class="step-circle" style="width:44px;height:44px;font-size:18px;">①</div>
+                  <div class="step-text" style="font-size:22px;">先穿長袖、長褲</div>
+                </div>
+                <div class="step-arrow" style="font-size:22px;padding:4px 0;">↓</div>
+                <div class="step-item" style="padding:14px 20px;">
+                  <div class="step-circle" style="width:44px;height:44px;font-size:18px;">②</div>
+                  <div class="step-text" style="font-size:22px;">穿學校運動外套</div>
+                </div>
+                <div class="step-arrow" style="font-size:22px;padding:4px 0;">↓</div>
+                <div class="step-item" style="padding:14px 20px;">
+                  <div class="step-circle" style="width:44px;height:44px;font-size:18px;">③</div>
+                  <div class="step-text" style="font-size:22px;">如果仍不夠暖，再增加保暖衣物</div>
+                </div>
+              </div>
+              <div class="chip-row">
+                <span class="chip">裡面可以加保暖衣</span>
+                <span class="chip">外面可以加個人外套、圍巾、手套等</span>
+              </div>
+              <div class="big-line" style="font-size:32px;">保暖可以加，<span class="accent">校服不能被取代</span>。</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10 : 容易搞混 -->
+      <section class="slide" data-index="9">
+        <span class="tag">10 / 11</span>
+        <div class="slide-eyebrow">家長最容易搞混的地方</div>
+        <h2 class="slide-title">保暖 ≠ 取代校服</h2>
+        <div class="slide-body">
+          <div class="rw-row">
+            <div class="rw-card wrong">
+              <div class="rw-title">✕ 不符合規定</div>
+              <ul class="rw-list">
+                <li>單穿便服外套取代學校運動外套</li>
+                <li>只穿短袖或短褲，沒有依規定穿著</li>
+              </ul>
+            </div>
+            <div class="rw-card right">
+              <div class="rw-title">✓ 符合規定</div>
+              <ul class="rw-list">
+                <li>學校運動服＋運動外套</li>
+                <li>外面再加個人外套、圍巾、手套等</li>
+                <li>裡面增加保暖衣物</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="rw-bottom">重點不是不能保暖，而是保暖方式要符合學校服儀規定。</div>
+      </section>
+
+      <!-- SLIDE 11 : 總結 -->
+      <section class="slide" data-index="10">
+        <span class="tag">11 / 11</span>
+        <div class="slide-eyebrow">最後總結</div>
+        <h2 class="slide-title">請家長一起提醒孩子</h2>
+        <div class="slide-body" style="align-items:center;">
+          <div style="width:100%;">
+            <div class="grid4">
+              <div class="grid-item">
+                <div class="grid-icon">⏰</div>
+                <div class="grid-text">7:30 前到校</div>
+              </div>
+              <div class="grid-item">
+                <div class="grid-icon">🌧</div>
+                <div class="grid-text">雨天安全優先</div>
+              </div>
+              <div class="grid-item">
+                <div class="grid-icon">📢</div>
+                <div class="grid-text">特殊狀況主動說明</div>
+              </div>
+              <div class="grid-item">
+                <div class="grid-icon">👕</div>
+                <div class="grid-text">依規定穿著，天冷正確保暖</div>
+              </div>
+            </div>
+            <p class="summary-quote">生活規範不是增加孩子的負擔，而是幫助孩子建立自律、責任與安全意識。</p>
+            <p class="summary-thanks">謝謝家長一起配合與提醒。</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <div id="controls">
+    <button class="ctrl-btn" id="prevBtn" aria-label="上一頁" title="上一頁 (←)">‹</button>
+    <div id="pageIndicator"><span id="pageNum">01</span> / <span id="pageTotal">10</span></div>
+    <button class="ctrl-btn" id="nextBtn" aria-label="下一頁" title="下一頁 (→ / Space)">›</button>
+    <button class="ctrl-btn" id="fullscreenBtn" aria-label="全螢幕" title="全螢幕播放"><span id="fsIcon">⛶</span></button>
+  </div>
+
+  <div id="lightbox" role="dialog" aria-modal="true" aria-label="圖片放大檢視">
+    <button id="lightboxClose" aria-label="關閉">✕</button>
+    <img id="lightboxImg" src="" alt="放大圖片">
+    <div id="lightboxCaption"></div>
+    <div id="lightboxHint">按 ESC 或點擊空白處返回簡報</div>
+  </div>
+
+  <script>
+    (function () {
+      var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+      var total = slides.length;
+      var current = 0;
+      var stage = document.getElementById('stage');
+      var viewport = document.getElementById('viewport');
+      var pageNum = document.getElementById('pageNum');
+      var pageTotal = document.getElementById('pageTotal');
+      var progressFill = document.getElementById('progressFill');
+      var prevBtn = document.getElementById('prevBtn');
+      var nextBtn = document.getElementById('nextBtn');
+      var fullscreenBtn = document.getElementById('fullscreenBtn');
+      var lightbox = document.getElementById('lightbox');
+      var lightboxImg = document.getElementById('lightboxImg');
+      var lightboxCaption = document.getElementById('lightboxCaption');
+      var lightboxClose = document.getElementById('lightboxClose');
+
+      pageTotal.textContent = String(total).padStart(2, '0');
+
+      // 將判斷點改為 1024px，涵蓋平板直立與手機
+      function isMobileMode() {
+        return window.matchMedia('(max-width:1024px)').matches;
+      }
+
+      function pad(n) { return String(n).padStart(2, '0'); }
+
+      function updateIndicator() {
+        pageNum.textContent = pad(current + 1);
+        progressFill.style.width = (((current + 1) / total) * 100) + '%';
+        prevBtn.disabled = false;
+        nextBtn.disabled = false;
+      }
+
+      function goTo(index) {
+        if (index < 0) index = 0;
+        if (index > total - 1) index = total - 1;
+        current = index;
+        if (isMobileMode()) {
+          slides[current].scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          slides.forEach(function (s, i) {
+            s.classList.toggle('active', i === current);
+          });
+        }
+        updateIndicator();
+      }
+
+      prevBtn.addEventListener('click', function () { goTo(current - 1); });
+      nextBtn.addEventListener('click', function () { goTo(current + 1); });
+
+      /* ---------- keyboard navigation ---------- */
+      document.addEventListener('keydown', function (e) {
+        if (lightbox.classList.contains('open')) {
+          if (e.key === 'Escape') {
+            closeLightbox();
+            e.preventDefault();
+          }
+          return; /* while lightbox open, don't let other keys change slide */
+        }
+        switch (e.key) {
+          case 'ArrowRight':
+          case ' ':
+            e.preventDefault();
+            goTo(current + 1);
+            break;
+          case 'ArrowLeft':
+            e.preventDefault();
+            goTo(current - 1);
+            break;
+          case 'Home':
+            e.preventDefault();
+            goTo(0);
+            break;
+          case 'End':
+            e.preventDefault();
+            goTo(total - 1);
+            break;
+          case 'Escape':
+            /* not in lightbox: do nothing, stay in deck */
+            break;
+        }
+      });
+
+      /* ---------- fullscreen ---------- */
+      fullscreenBtn.addEventListener('click', function () {
+        if (!document.fullscreenElement) {
+          var el = document.documentElement;
+          if (el.requestFullscreen) { el.requestFullscreen(); }
+          else if (el.webkitRequestFullscreen) { el.webkitRequestFullscreen(); }
+        } else {
+          if (document.exitFullscreen) { document.exitFullscreen(); }
+          else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); }
+        }
+      });
+
+      /* ---------- stage scaling for desktop 16:9 fit ---------- */
+      function scaleStage() {
+        if (isMobileMode()) {
+          stage.style.transform = 'none';
+          return;
+        }
+        var vw = viewport.clientWidth;
+        var vh = viewport.clientHeight;
+        var scale = Math.min(vw / 1920, vh / 1080);
+        stage.style.transform = 'scale(' + scale + ')';
+      }
+      window.addEventListener('resize', function () {
+        scaleStage();
+      });
+      scaleStage();
+
+      /* ---------- mobile scroll -> update page indicator ---------- */
+      var scrollTicking = false;
+      viewport.addEventListener('scroll', function () {
+        if (!isMobileMode()) return;
+        if (scrollTicking) return;
+        scrollTicking = true;
+        requestAnimationFrame(function () {
+          var vpTop = viewport.scrollTop;
+          var closest = 0;
+          var minDist = Infinity;
+          slides.forEach(function (s, i) {
+            var dist = Math.abs(s.offsetTop - vpTop);
+            if (dist < minDist) { minDist = dist; closest = i; }
+          });
+          current = closest;
+          updateIndicator();
+          scrollTicking = false;
+        });
+      });
+
+      /* ---------- lightbox ---------- */
+      var lastFocused = null;
+      function openLightbox(imgEl, caption) {
+        if (!imgEl || imgEl.tagName !== 'IMG') return;
+        lightboxImg.src = imgEl.src;
+        lightboxImg.alt = imgEl.alt || '';
+        lightboxCaption.textContent = caption || '';
+        lightbox.classList.add('open');
+        lastFocused = document.activeElement;
+        lightboxClose.focus();
+      }
+      function closeLightbox() {
+        lightbox.classList.remove('open');
+        lightboxImg.src = '';
+        if (lastFocused && lastFocused.focus) { lastFocused.focus(); }
+      }
+      document.querySelectorAll('.image-frame.zoomable').forEach(function (frame) {
+        frame.addEventListener('click', function () {
+          var img = frame.querySelector('img');
+          var caption = frame.getAttribute('data-caption') || '';
+          openLightbox(img, caption);
+        });
+      });
+      lightboxClose.addEventListener('click', closeLightbox);
+      lightbox.addEventListener('click', function (e) {
+        if (e.target === lightbox) {
+          closeLightbox();
+        }
+      });
+
+      /* init */
+      updateIndicator();
+    })();
+  </script>
+
+</body>
+
+</html>
